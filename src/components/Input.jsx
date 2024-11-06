@@ -1,7 +1,11 @@
 import React from "react";
 
 function Input(props){
-    return <input type={props.type} name={props.name} id={props.id} className={props.className} placeholder={props.placeholder} value={props.value} {...props.isRequired!=null && "required"} />
+    const required = props.isRequired!=null && "required";
+    console.log(required);
+    
+
+    return <input type={props.type} name={props.name} id={props.id} className={props.className} placeholder={props.placeholder} value={props.value} {...required} />
 }
 
 export default Input;

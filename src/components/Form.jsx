@@ -6,8 +6,7 @@ import Label from "./Label";
 import Input from "./Input";
 
 function Form(props) {
-  const needToRegister = props.needToRegister != null && true;
-  console.log(needToRegister);
+  const isRegistered = props.isRegistered;
 
   return (
     <>
@@ -16,6 +15,7 @@ function Form(props) {
           <Label
             for="email"
             className="block mb-2 text-sm font-medium text-gray-900"
+            value="Inserisci l'email"
           />
           <Input
             type="email"
@@ -30,6 +30,7 @@ function Form(props) {
           <Label
             for="password"
             className="block mb-2 text-sm font-medium text-gray-900"
+            value="Inserisci la password"
           />
           <Input
             type="password"
@@ -41,13 +42,36 @@ function Form(props) {
           />
         </div>
 
-        <Link to="/newAccess">Non hai un account? Registrati</Link>
+        {isRegistered === "false" && (
+          <div>
+            <Label
+              for="confirm_password"
+              className="block mb-2 text-sm font-medium text-gray-900"
+              value="Conferma la password"
+            />
+            <Input
+              type="password"
+              name="confirm_password"
+              id="confirm_password"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              placeholder="************"
+              isRequired="true"
+            />
+          </div>
+        )}
+        <div className="top-4 text-red-500">
+          {isRegistered === "true" ? (
+            <Link to="/newAccess">Non hai un account? Registrati</Link>
+          ) : (
+            <Link to="/">Hai già un account? Accedi</Link>
+          )}
+        </div>
 
         <button
           type="submit"
-          className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center border"
         >
-          Accedi
+          {isRegistered === "true" ? "Accedi" : "Registrati"}
         </button>
       </form>
     </>

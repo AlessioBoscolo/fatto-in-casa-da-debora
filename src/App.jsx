@@ -1,11 +1,9 @@
 import React from "react";
-import Login from "./pages/Login";
+import UserAccess from "./pages/UserAccess";
 
 function App() {
     return (
-        <>
-            <Login />
-        </>
+        <UserAccess />
       )}
 
 export default App;
