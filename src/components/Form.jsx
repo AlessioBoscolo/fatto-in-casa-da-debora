@@ -5,42 +5,40 @@ import { Link } from "react-router-dom";
 import Label from "./Label";
 import Input from "./Input";
 
+//importing form field
+import userAccess from "../formValues";
+
 function Form(props) {
   const isRegistered = props.isRegistered;
+  const formField = userAccess;
+
+  console.log(formField);
 
   return (
     <>
-      <form className="space-y-4 md:space-y-6" action={props.action}>
-        <div>
-          <Label
-            for="email"
-            className="block mb-2 text-sm font-medium text-gray-900"
-            value="Inserisci l'email"
-          />
-          <Input
-            type="email"
-            name="email"
-            id="email"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-            placeholder="name@gmail.com"
-            isRequired="true"
-          />
-        </div>
-        <div>
-          <Label
-            for="password"
-            className="block mb-2 text-sm font-medium text-gray-900"
-            value="Inserisci la password"
-          />
-          <Input
-            type="password"
-            name="password"
-            id="password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-            placeholder="************"
-            isRequired="true"
-          />
-        </div>
+      <form className="space-y-4 md:space-y-6" action="">
+        {Object.entries(formField).map(([key, field]) => (
+          field.influenceIsRegister === "false" &&
+          <div key={key}>
+            <Label
+              for={key}
+              className="block mb-2 text-sm font-medium text-gray-900"
+              value={field.value}
+            />
+            <Input
+              type={
+                key === "password" || key === "confirm_password"
+                  ? "password"
+                  : "text"
+              }
+              name={key}
+              id={key}
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              placeholder={field.placeholder}
+              isRequired="true"
+            />
+          </div>
+        ))}
 
         {isRegistered === "false" && (
           <div>
@@ -67,12 +65,14 @@ function Form(props) {
           )}
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center border"
-        >
-          {isRegistered === "true" ? "Accedi" : "Registrati"}
-        </button>
+        <Link to={"/home"}>
+          <button
+            type="submit"
+            className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center border"
+          >
+            {isRegistered === "true" ? "Accedi" : "Registrati"}
+          </button>
+        </Link>
       </form>
     </>
   );

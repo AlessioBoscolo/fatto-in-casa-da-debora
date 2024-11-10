@@ -5,6 +5,7 @@ import App from "./App";
 import Contacts from './pages/Contacts';
 import About from './pages/About';
 import Other from './pages/Other';
+import Home from "./pages/Home";
 
 
 
@@ -29,6 +30,11 @@ const route = createBrowserRouter([
       path: "/newAccess",
       element: <App></App>,
     },
+    {
+      path: "/home",
+      element: <Home></Home>,
+    },
+
   
 ]);
 
