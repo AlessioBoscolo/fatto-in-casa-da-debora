@@ -12,8 +12,6 @@ function Form(props) {
   const isRegistered = props.isRegistered;
   const formField = userAccess;
 
-  console.log(formField);
-
   return (
     <>
       <form className="space-y-4 md:space-y-6" action="">
