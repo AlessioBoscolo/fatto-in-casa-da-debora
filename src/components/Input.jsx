@@ -1,9 +1,14 @@
 import React from "react";
 
 function Input(props){
-    const required = props.isRequired!=null && "required";
+    const required = props.isRequired;
+
+    if(required === "true"){
+        return <input type={props.type} name={props.name} id={props.id} className={props.className} placeholder={props.placeholder} value={props.value} required/>
+    }else{
+        return <input type={props.type} name={props.name} id={props.id} className={props.className} placeholder={props.placeholder} value={props.value} />
+    }
     
-    return <input type={props.type} name={props.name} id={props.id} className={props.className} placeholder={props.placeholder} value={props.value} {...required} />
 }
 
 export default Input;
