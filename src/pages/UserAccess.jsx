@@ -3,7 +3,7 @@ import Image from "../components/Image";
 import Form from "../components/Form";
 
 function UserAccess() {
-    const isRegistered = window.location.pathname === "/newAccess" ? "false" : "true";
+    const isRegistered = window.location.pathname === "/newAccess" ? false : true;
 
   return (
     <>
@@ -12,7 +12,7 @@ function UserAccess() {
         <div className="w-full bg-white rounded-lg md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-              {isRegistered === "true" ? "Accedi al tuo account" : "Registrati"}
+              {isRegistered === true ? "Accedi al tuo account" : "Registrati"}
             </h1>
             <Form isRegistered={isRegistered} />
           </div>
