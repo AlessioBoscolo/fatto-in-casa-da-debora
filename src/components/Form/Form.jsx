@@ -17,7 +17,7 @@ function Form(props) {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [error, setError] = useState(null); // Add this line
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,16 +49,12 @@ function Form(props) {
         const userData = await response.json();
         login(userData);
         navigate("/home");
-        // Handle successful login/registration
-        // For example, store user data in context/state
-        // Redirect to dashboard
       } else {
         const errorData = await response.json();
         setError(errorData.error);
       }
     } catch (error) {
       console.error("Error:", error);
-      // Show error message to user
     }
   };
 
@@ -136,14 +132,6 @@ function Form(props) {
           type="submit"
           value={isRegistered === true ? "Accedi" : "Registrati"}
         />
-        {/* <Link to={"/home"}>
-          <button
-            type="submit"
-            className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center border"
-          >
-            {isRegistered === true ? "Accedi" : "Registrati"}
-          </button>
-        </Link> */}
       </form>
     </>
   );

@@ -14,14 +14,12 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      // Call backend to invalidate session/token
       const response = await fetch("http://localhost:3001/api/logout", {
         method: "POST",
-        // credentials: "include", // if using cookies
       });
 
       if (response.ok) {
-        logout(); // Clear frontend state
+        logout();
         navigate("/");
       }
     } catch (error) {

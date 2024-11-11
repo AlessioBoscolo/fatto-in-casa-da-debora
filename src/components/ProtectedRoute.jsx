@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
-  // const user = false;
 
   if (!user) {
     return <Navigate to="/" replace />;

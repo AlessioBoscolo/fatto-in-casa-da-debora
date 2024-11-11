@@ -5,6 +5,7 @@ import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Routing from "./settings.js"; // Importing routing from routing.js
 const router = Routing; // Assigning routes into router var
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

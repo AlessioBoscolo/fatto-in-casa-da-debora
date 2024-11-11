@@ -1,9 +1,7 @@
 import { createContext, useState, useContext } from 'react';
 
-// Create the context
 const AuthContext = createContext(null);
 
-// Create the provider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
@@ -27,7 +25,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Create the hook to use the context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
