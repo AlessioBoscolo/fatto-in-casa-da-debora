@@ -1,9 +1,23 @@
 const userAccess = {
-    email: {
+    name: {
         type: "text",
+        value: "Inserisci il nome",
+        placeholder: "nome",
+        isRequired: true,
+        isOnlyRegistration: true,
+    },
+    surname: {
+        type: "text",
+        value: "Inserisci il cognome",
+        placeholder: "cognome",
+        isRequired: true,
+        isOnlyRegistration: true,
+    },
+    email: {
+        type: "email",
         value: "Inserisci l'email",
         placeholder: "name@gmail.com",
-        isRequired: false,
+        isRequired: true,
         isOnlyRegistration: false,
     },
     password: {

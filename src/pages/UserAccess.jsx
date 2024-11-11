@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "../components/Image";
-import Form from "../components/Form";
+import Form from "../components/Form/Form";
 
 function UserAccess() {
-    const isRegistered = window.location.pathname === "/newAccess" ? false : true;
+  const isRegistered = window.location.pathname === "/newAccess" ? false : true;
 
   return (
     <>
@@ -14,7 +14,7 @@ function UserAccess() {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               {isRegistered === true ? "Accedi al tuo account" : "Registrati"}
             </h1>
-            <Form isRegistered={isRegistered} />
+            <Form isRegistered={isRegistered} action="/home" method="POST" />
           </div>
         </div>
       </div>

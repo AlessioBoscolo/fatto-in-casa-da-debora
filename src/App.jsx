@@ -2,8 +2,7 @@ import React from "react";
 import UserAccess from "./pages/UserAccess";
 
 function App() {
-    return (
-        <UserAccess />
-      )}
+  return <UserAccess />;
+}
 
 export default App;
