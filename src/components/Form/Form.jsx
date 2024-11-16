@@ -63,12 +63,12 @@ function Form(props) {
     <>
       {error && (
         <div
-          className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          className="fixed top-4 left-0 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
           role="alert"
         >
           <span className="block sm:inline">{error}</span>
           <button
-            className="absolute top-0 right-0 px-4 py-3"
+            className="absolute top-0 right-0"
             onClick={() => setError(null)}
           >
             <span className="text-2xl">&times;</span>
