@@ -6,7 +6,7 @@ import Label from "./Label";
 import Input from "./Input";
 
 //importing form field
-import userAccess from "../../form/formValues";
+import userAccess from "../../dynamic/formValues";
 
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +23,7 @@ function Form(props) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const formValues = Object.fromEntries(formData.entries());
+    console.log(formValues)
 
     if ((formValues.password !== formValues.confirm_password) && !isRegistered) {
       setError("Le password non corrispondono");
@@ -30,7 +31,7 @@ function Form(props) {
     }
 
     try {
-      const endpoint = isRegistered ? "/api/login" : "/api/register";
+      const endpoint = isRegistered ? "/api/user/login" : "/api/user/register";
       const response = await fetch(`http://localhost:3001${endpoint}`, {
         method: "POST",
         headers: {

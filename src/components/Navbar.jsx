@@ -5,27 +5,7 @@ import Input from "./Form/Input";
 import Image from "./Image";
 import List from "./List/List";
 
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-
 function Navbar() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/api/logout", {
-        method: "POST",
-      });
-
-      if (response.ok) {
-        logout();
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
 
   return (
     <div className="navbar">
@@ -55,27 +35,23 @@ function Navbar() {
         </div>
       </div>
 
-      <div className="flex-none navbar-end mr-[-2%] md:mr-0">
+      <div className="flex-1 navbar-end">
         <Link to="/menu">
-          <button className="btn btn-ghost mr-[5%] menu menu-horizonta ">
+          <button className="btn btn-ghost menu menu-horizonta ">
             Menu
           </button>
         </Link>
         <Link to="/ricette">
-          <button className="btn btn-ghost mr-[5%] menu menu-horizontal">
+          <button className="btn btn-ghost menu menu-horizontal">
             Tutte le Ricette
           </button>
         </Link>
-        <List />
+        <List title="category"/>
       </div>
 
-      <div className="flex-none navbar-end mr-[-2%] md:mr-0">
-        <button
-          onClick={handleLogout}
-          className="btn btn-ghost mr-[5%] menu menu-horizonta "
-        >
-          Logout
-        </button>
+      <div className="flex-1 navbar-end md:mr-0">
+        <List title="userAccess"/>
+
       </div>
 
       <button className="btn btn-ghost btn-circle md:hidden">
