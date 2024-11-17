@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import Input from "./Form/Input";
-import Image from "./Image";
-import List from "./List/List";
+import Input from "../Form/Input";
+import Image from "../Image";
+import List from "../List/List";
 
 function Navbar() {
 
