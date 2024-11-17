@@ -1,15 +1,19 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-//imported components
+// Importing components
 import Label from "./Label";
 import Input from "./Input";
 
-//importing form field
+// Iwmporting form field
 import userAccess from "../../dynamic/formValues";
 
+// Importing auth info
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
+// Importing toast
+import { showToast } from '../Toast/Toast';
 
 function Form(props) {
   const isRegistered = props.isRegistered;
@@ -17,16 +21,13 @@ function Form(props) {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [error, setError] = useState(null);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const formValues = Object.fromEntries(formData.entries());
-    console.log(formValues)
 
-    if ((formValues.password !== formValues.confirm_password) && !isRegistered) {
-      setError("Le password non corrispondono");
+    if (formValues.password !== formValues.confirm_password && !isRegistered) {
+      showToast('error', 'Le password non corrispondono');
       return;
     }
 
@@ -49,10 +50,10 @@ function Form(props) {
         console.log(response);
         const userData = await response.json();
         login(userData);
+        showToast('success', 'Login effettuato con successo!');
         navigate("/home");
       } else {
-        const errorData = await response.json();
-        setError(errorData.error);
+        showToast('error', 'Credenziali errate!');
       }
     } catch (error) {
       console.error("Error:", error);
@@ -61,21 +62,6 @@ function Form(props) {
 
   return (
     <>
-      {error && (
-        <div
-          className="fixed top-4 left-0 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-          role="alert"
-        >
-          <span className="block sm:inline">{error}</span>
-          <button
-            className="absolute top-0 right-0"
-            onClick={() => setError(null)}
-          >
-            <span className="text-2xl">&times;</span>
-          </button>
-        </div>
-      )}
-
       <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
         {Object.entries(formField).map(([key, field]) =>
           field.isOnlyRegistration === false ||

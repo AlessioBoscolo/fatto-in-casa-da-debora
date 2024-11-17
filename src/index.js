@@ -4,6 +4,7 @@ import reportWebVitals from "./reportWebVitals";
 import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Routing from "./settings.js"; // Importing routing from routing.js
+import { ToastContainer } from "react-toastify";
 const router = Routing; // Assigning routes into router var
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -11,7 +12,8 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+        <ToastContainer />
+        <RouterProvider router={router} />
     </AuthProvider>
   </React.StrictMode>
 );
