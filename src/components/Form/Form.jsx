@@ -47,13 +47,22 @@ function Form(props) {
       });
 
       if (response.ok) {
-        console.log(response);
-        const userData = await response.json();
-        login(userData);
-        showToast('success', 'Login effettuato con successo!');
-        navigate("/home");
+        if(!isRegistered){
+          showToast('info', 'Richiesta inviata! Aspetta che un admin la accetti');
+          navigate("/");
+        }else{
+          const userData = await response.json();
+          login(userData);
+          showToast('success', 'Login effettuato con successo!');
+          navigate("/home");
+          }
       } else {
-        showToast('error', 'Credenziali errate!');
+        const errorData = await response.json();
+        if(errorData.error === "Not yet authorized"){
+          showToast('error', 'Account non ancora autorizzato. Contatta un amministratore');
+        }else{
+          showToast('error', 'Credenziali errate!');
+        }
       }
     } catch (error) {
       console.error("Error:", error);

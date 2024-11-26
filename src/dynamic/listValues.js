@@ -17,11 +17,13 @@ const typeList = {
             name: "Dashboard",
             path: "/home",
             click: null,
+            permission: "3"
         },
         choose_2: {
             name: "Logout",
             path: null,
             click: "handleLogout",
+            permission: "1"
         }
     }
 }

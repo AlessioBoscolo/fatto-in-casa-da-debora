@@ -8,7 +8,7 @@ import List from "../List/List";
 function Navbar() {
 
   return (
-    <div className="navbar">
+    <div className="navbar border-b border-slate-400">
       <div className="flex-1 navbar-start">
         <Link to="/home">
           <button className="btn btn-ghost normal-case text-xl h-[70px]">
@@ -51,7 +51,6 @@ function Navbar() {
 
       <div className="flex-1 navbar-end md:mr-0">
         <List title="userAccess"/>
-
       </div>
 
       <button className="btn btn-ghost btn-circle md:hidden">

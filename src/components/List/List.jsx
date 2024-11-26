@@ -36,7 +36,6 @@ function List(props) {
 
   const listChoosen =
     props.title === "category" ? categories : typeList[props.title];
-  console.log(categories);
 
   function writeList() {
     if (props.title === "category") {
@@ -45,31 +44,36 @@ function List(props) {
           key={key}
           value={field.nome_categoria}
           path={"/" + field.nome_categoria.replace(/\s+/g, '')}
-          className=""
+          className="whitespace-nowrap"
         />
       ));
     } else {
-      return Object.entries(listChoosen).map(([key, field]) => (
-        <Element
-          key={key}
-          value={field.name}
-          path={field.path}
-          click={field.click}
-          className="text-red-500 hover:text-red-700"
-        />
-      ));
+      return Object.entries(listChoosen).map(([key, field]) => {
+        if (user.permesso_utente >= field.permission) {
+          return (
+            <Element
+              key={key}
+              value={field.name}
+              path={field.path}
+              click={field.click}
+              className="text-red-500 hover:text-red-700 whitespace-nowrap"
+            />
+          );
+        }
+        return null;
+      });
     }
   }
   const { user } = useAuth();
-
+  
   return (
     <ul className="menu menu-horizontal px-1">
       <li>
         <details>
           <summary>
-            {props.title === "category" ? "Ricette" : user.name}
+            {props.title === "category" ? "Ricette" : `Benvenuto ${user.nome_utente}!`}
           </summary>
-          <ul className="p-2 z-50">{writeList()}</ul>
+          <ul className="p-2 z-50 border whitespace-nowrap min-w-max">{writeList()}</ul>
         </details>
       </li>
     </ul>
