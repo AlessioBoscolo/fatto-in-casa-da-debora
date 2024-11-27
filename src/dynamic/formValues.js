@@ -2,14 +2,14 @@ const userAccess = {
     name: {
         type: "text",
         value: "Inserisci il nome",
-        placeholder: "nome",
+        placeholder: "Nome",
         isRequired: true,
         isOnlyRegistration: true,
     },
     surname: {
         type: "text",
         value: "Inserisci il cognome",
-        placeholder: "cognome",
+        placeholder: "Cognome",
         isRequired: true,
         isOnlyRegistration: true,
     },

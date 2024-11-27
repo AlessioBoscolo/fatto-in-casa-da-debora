@@ -43,7 +43,7 @@ function List(props) {
         <Element
           key={key}
           value={field.nome_categoria}
-          path={"/" + field.nome_categoria.replace(/\s+/g, '')}
+          path={"/categoria/" + field.nome_categoria.replace(/\s+/g, "")}
           className="whitespace-nowrap"
         />
       ));
@@ -65,18 +65,46 @@ function List(props) {
     }
   }
   const { user } = useAuth();
-  
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
   return (
-    <ul className="menu menu-horizontal px-1">
-      <li>
-        <details>
-          <summary>
-            {props.title === "category" ? "Ricette" : `Benvenuto ${user.nome_utente}!`}
-          </summary>
-          <ul className="p-2 z-50 border whitespace-nowrap min-w-max">{writeList()}</ul>
-        </details>
-      </li>
-    </ul>
+    <>
+      <a
+        href="#"
+        className="hover:text-red-700 text-red-500 font-bold text-[15px] lg:hover:fill-[#007bff] flex items-center gap-1"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsMenuOpen(!isMenuOpen);
+        }}
+      >
+        {props.title === "category"
+          ? "Ricette"
+          : `Benvenuto ${user.nome_utente}!`}
+        <svg
+          className={`w-4 h-4 transition-transform ${
+            isMenuOpen ? "rotate-180" : ""
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </a>
+
+      <div
+        className={`${
+          isMenuOpen ? "block" : "hidden"
+        } lg:group-hover:block lg:absolute lg:top-full lg:left-0 lg:w-48 bg-white shadow-lg rounded-lg py-2 lg:mt-2 z-50 whitespace-nowrap min-w-max border`}
+      >
+        {writeList()}
+      </div>
+    </>
   );
 }
 

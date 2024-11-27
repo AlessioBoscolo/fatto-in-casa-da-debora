@@ -22,23 +22,32 @@ function Element(props) {
       console.error("Logout failed:", error);
     }
   };
-
-
   const handleClick = eval(props.click);
-
   function composeElement() {
     if (props.path !== null) {
       return (
         <Link to={props.path}>
-          <button onClick={handleClick}>{props.value}</button>
+          <span
+            onClick={handleClick}
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            {props.value}
+          </span>
         </Link>
       );
     } else {
-      return <button onClick={handleClick}>{props.value}</button>;
+      return (
+        <span
+          onClick={handleClick}
+          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          {props.value}
+        </span>
+      );
     }
   }
 
-  return <li className={props.className}>{composeElement()}</li>;
+  return composeElement();
 }
 
 export default Element;
