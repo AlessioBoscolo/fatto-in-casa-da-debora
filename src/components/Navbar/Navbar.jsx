@@ -5,8 +5,11 @@ import Input from "../Form/Input";
 import Image from "../Image";
 import List from "../List/List";
 import Icon from "../Icon";
+import Search from "../Search";
 
 function Navbar() {
+  const isHome = window.location.pathname === "/home" ? true : false;
+
   function handleClick() {
     var collapseMenu = document.getElementById("collapseMenu");
 
@@ -18,7 +21,7 @@ function Navbar() {
   }
 
   return (
-    <header className="bg-white font-sans min-h-[60px] px-10 py-3 relative tracking-wide relative z-50">
+    <header className="bg-white font-sans min-h-[60px] px-10 py-2 relative tracking-wide relative z-50">
       <div className="border-b flex flex-wrap items-center max-lg:gap-y-6 max-sm:gap-x-4">
         <a href="">
           <Image src="./images/logo.png" alt="logo" className="w-36" />
@@ -70,15 +73,7 @@ function Navbar() {
           </button>
         </div>
       </div>
-
-      <div className="bg-gray-100 border-transparent focus-within:border-blue-500 focus-within:bg-transparent flex px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6">
-        <Icon title="search"></Icon>
-        <input
-          type="text"
-          placeholder="Cerca..."
-          className="w-full outline-none bg-transparent text-gray-600 font-semibold text-[15px]"
-        />
-      </div>
+      {isHome && <Search></Search>}
     </header>
   );
 }
