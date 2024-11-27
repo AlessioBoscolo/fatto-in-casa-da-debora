@@ -100,7 +100,7 @@ function List(props) {
       <div
         className={`${
           isMenuOpen ? "block" : "hidden"
-        } lg:group-hover:block lg:absolute lg:top-full lg:left-0 lg:w-48 bg-white shadow-lg rounded-lg py-2 lg:mt-2 z-50 whitespace-nowrap min-w-max border`}
+        } lg:group-hover:block lg:absolute lg:top-full lg:left-0 lg:w-48 bg-white shadow-lg rounded-lg py-2   z-50 whitespace-nowrap min-w-max border`}
       >
         {writeList()}
       </div>
