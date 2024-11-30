@@ -39,7 +39,7 @@ function Categories() {
                 width="70"
                 height="70"
                 src={field.link_categoria}
-                alt="food-and-wine"
+                alt={"img-" + field.nome_categoria.replace(/\s+/g, "")}
                 className=""
               />
             </div>
