@@ -3,7 +3,7 @@ const pool = require("../config/database");
 const homeController = {
   getCategory: async (req, res) => {
     try {
-      const query = "SELECT * FROM categoria";
+      const query = "SELECT * FROM categoria ORDER BY id_categoria ASC";
       const result = await pool.query(query);
 
       // Send all rows as response
