@@ -63,8 +63,7 @@ function Navbar() {
 
         <div className="flex items-center ml-auto space-x-8">
           <Icon title="heart" notificationNr="0"></Icon>
-          <Icon title="cart" notificationNr="4"></Icon>
-          <Icon title="bell" notificationNr="1"></Icon>
+          <Icon title="bell" notificationNr="0"></Icon>
 
           <button id="toggleOpen" className="lg:hidden" onClick={handleClick}>
             <Icon title="open-menu"></Icon>

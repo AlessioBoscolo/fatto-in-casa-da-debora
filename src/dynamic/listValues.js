@@ -19,6 +19,12 @@ const typeList = {
       permission: "3",
     },
     choose_2: {
+      name: "Inserisci Ricetta",
+      path: "/home",
+      click: null,
+      permission: "2",
+    },
+    choose_3: {
       name: "Logout",
       path: null,
       click: "handleLogout",

@@ -18,9 +18,11 @@ function Icon(props) {
                 data-original="#000000"
               ></path>
             </svg>
-            <span className="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
-              {props.notificationNr}
-            </span>
+            {props.notificationNr > 0 && (
+              <span className="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
+                {props.notificationNr}
+              </span>
+            )}
           </span>
         );
 
@@ -39,9 +41,11 @@ function Icon(props) {
                 data-original="#000000"
               />
             </svg>
-            <span className="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
-              {props.notificationNr}
-            </span>
+            {props.notificationNr > 0 && (
+              <span className="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
+                {props.notificationNr}
+              </span>
+            )}
           </span>
         );
 
@@ -60,9 +64,11 @@ function Icon(props) {
                 data-original="#000000"
               ></path>
             </svg>
-            <span className="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
-              {props.notificationNr}
-            </span>
+            {props.notificationNr > 0 && (
+              <span className="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
+                {props.notificationNr}
+              </span>
+            )}
           </span>
         );
         break;

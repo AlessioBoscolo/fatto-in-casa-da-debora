@@ -30,24 +30,25 @@ function Categories() {
   };
 
   function writeIcon() {
-    return Object.entries(categories).map(([key, field]) => (
-      <div key={key} className="flex items-center justify-center">
-        <div className="grid grid-cols-1">
-          <Link className="" to={"/categoria/" + field.nome_categoria.replace(/\s+/g, "")}>
-            <div className="flex items-center justify-center">
-              <img
-                width="70"
-                height="70"
-                src={field.link_categoria}
-                alt={"img-" + field.nome_categoria.replace(/\s+/g, "")}
-                className=""
-              />
-            </div>
-            <div className="mt-2 text-white">{field.nome_categoria}</div>
-          </Link>
+    return Object.entries(categories).map(([key, field]) => 
+      field.link_categoria && (
+        <div key={key} className="flex items-center justify-center">
+          <div className="grid grid-cols-1">
+            <Link className="" to={"/categoria/" + field.nome_categoria.replace(/\s+/g, "")}>
+              <div className="flex items-center justify-center">
+                <img
+                  width="70"
+                  height="70"
+                  src={field.link_categoria}
+                  alt={"img-" + field.nome_categoria.replace(/\s+/g, "")}
+                />
+              </div>
+              <div className="mt-2 text-white">{field.nome_categoria}</div>
+            </Link>
+          </div>
         </div>
-      </div>
-    ));
+      )
+    );
   }
 
   return (
