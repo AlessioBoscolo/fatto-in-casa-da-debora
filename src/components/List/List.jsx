@@ -79,7 +79,7 @@ function List(props) {
       >
         {props.title === "category"
           ? "Ricette"
-          : `Benvenuto ${user.nome_utente}!`}
+          : props.title === `Benvenuto ${user.nome_utente}!`}
         <svg
           className={`w-4 h-4 transition-transform ${
             isMenuOpen ? "rotate-180" : ""
