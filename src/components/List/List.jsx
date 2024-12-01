@@ -43,7 +43,7 @@ function List(props) {
         <Element
           key={key}
           value={field.nome_categoria}
-          path={"/categoria/" + field.nome_categoria.replace(/\s+/g, "")}
+          path={"/categoria/" + field.id_categoria}
           className="whitespace-nowrap"
         />
       ));

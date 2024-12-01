@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import Image from "./Image";
+
 function Categories() {
   const [categories, setCategories] = React.useState([]);
 
   React.useEffect(() => {
     fetchCategories();
-  });
+  }, [categories]);
 
   const fetchCategories = async () => {
     try {
@@ -34,9 +36,9 @@ function Categories() {
       field.link_categoria && (
         <div key={key} className="flex items-center justify-center">
           <div className="grid grid-cols-1">
-            <Link className="" to={"/categoria/" + field.nome_categoria.replace(/\s+/g, "")}>
+            <Link className="" to={"/categoria/" + field.id_categoria}>
               <div className="flex items-center justify-center">
-                <img
+                <Image
                   width="70"
                   height="70"
                   src={field.link_categoria}
