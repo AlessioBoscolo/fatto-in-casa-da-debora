@@ -42,7 +42,6 @@ const categoryController = {
   getNameCategory: async (req, res) => {
     try {
       const { id_categorias } = req.body;
-      console.log("Innser" + id_categorias);
       
       const result = await pool.query(
         "SELECT * FROM categoria WHERE id_categoria = $1",

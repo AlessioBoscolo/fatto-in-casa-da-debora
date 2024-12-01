@@ -36,7 +36,6 @@ function CategoryPage() {
     }
   };
 
-  console.log(categoryName);
 
   return (
     <>
