@@ -1,16 +1,4 @@
 const typeList = {
-  category: {
-    choose_1: {
-      name: "Test",
-      path: "/",
-      click: null,
-    },
-    choose_2: {
-      name: "Inserisci",
-      path: "/home",
-      click: null,
-    },
-  },
   userAccess: {
     choose_1: {
       name: "Dashboard",
@@ -33,14 +21,13 @@ const typeList = {
   },
   followUs: {
     choose_1: {
-        name: "Instagram",
-        permission: "1",
+      name: "Instagram",
+      permission: "1",
     },
     choose_2: {
-        name: "Facebook",
-        permission: "1",
+      name: "Facebook",
+      permission: "1",
     },
-
   },
 };
 
