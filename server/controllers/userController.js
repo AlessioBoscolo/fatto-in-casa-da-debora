@@ -10,7 +10,7 @@ const userController = {
 
       // Check if user already exists
       const userExists = await pool.query(
-        "SELECT * FROM utente WHERE email_utente = $1",
+        "SELECT nome, cognome FROM utente WHERE email_utente = $1",
         [email]
       );
 
@@ -85,6 +85,18 @@ const userController = {
       res.json({ message: "Logout successful" });
     }
   },
+  test: async (req, res) => {
+    try {
+      // Find user
+      const [rows] = await pool.query("SELECT * FROM test_table");
+
+      res.json(rows);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Server error" });
+    }
+  },
+
 };
 
 module.exports = userController;

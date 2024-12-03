@@ -33,7 +33,7 @@ function Form(props) {
 
     try {
       const endpoint = isRegistered ? "/api/user/login" : "/api/user/register";
-      const response = await fetch(`http://localhost:3001${endpoint}`, {
+      const response = await fetch(`http://api.incucinacondebora.it:3001${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

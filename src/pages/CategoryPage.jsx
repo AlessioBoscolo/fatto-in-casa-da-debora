@@ -15,7 +15,7 @@ function CategoryPage() {
   const fetchNameCategory = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3001/api/category/getNameCategory",
+        "http://api.incucinacondebora.it:3001/api/category/getNameCategory",
         {
           method: "POST",
           headers: {

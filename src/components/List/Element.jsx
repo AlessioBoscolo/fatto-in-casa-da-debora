@@ -10,7 +10,7 @@ function Element(props) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/user/logout", {
+      const response = await fetch("http://api.incucinacondebora.it:3001/api/user/logout", {
         method: "POST",
       });
 
