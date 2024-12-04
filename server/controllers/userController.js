@@ -29,6 +29,8 @@ const userController = {
         "INSERT INTO utente (nome_utente, cognome_utente, email_utente, password_utente, permesso_utente) VALUES (?, ?, ?, ?, ?)",
         [name, surname, email, hash, 0]
       );
+
+      res.json(result);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: err.message });
@@ -42,18 +44,18 @@ const userController = {
       var validPassword = false;
 
       // Find user
-      const result = await pool.query(
+      const [rows] = await pool.query(
         "SELECT * FROM utente WHERE email_utente = ?",
         [email]
-      );
+      );      
 
-      if (result.rows.length === 1) {
-        if(result.rows[0].permesso_utente != null){
-          validPassword = await bcrypt.compare(password, result.rows[0].password_utente);
+      if (rows.length === 1) {
+        if(rows[0].permesso_utente != 0){
+          validPassword = await bcrypt.compare(password, rows[0].password_utente);
         }else{
           return res.status(401).json({ error: "Not yet authorized" });
         }
-      } else if (result.rows.length === 0) {
+      } else if (rows.length === 0) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
@@ -61,7 +63,7 @@ const userController = {
         return res.status(401).json({ error: "Invalid credentials" });
       }
       // Don't send password back to client
-      const {password_utente: _, ...user } = result.rows[0];
+      const {password_utente: _, ...user } = rows[0];
       res.json(user);
     } catch (err) {
       console.error(err.message);

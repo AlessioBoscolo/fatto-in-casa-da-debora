@@ -1,15 +1,12 @@
 const getApiUrl = () => {
-  const environment = "production";
+  const environment = "development";
 
-  if (environment === "production") {
-    return "https://api.incucinacondebora.it";
-  } else {
+  if (environment === "development") {
     return "http://localhost";
+  } else {
+    return "https://api.incucinacondebora.it";
   }
 };
-
-console.log(getApiUrl());
-
 
 module.exports = {
   apiUrl: getApiUrl(),

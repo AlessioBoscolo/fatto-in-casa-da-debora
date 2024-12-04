@@ -15,10 +15,10 @@ if (!isDevelopment()) {
 } else {
   //use test database
   config = {
-    host: '31.11.39.189', // o l'indirizzo del tuo server MySQL
-    user: process.env.DB_USERNAME, // l'utente MySQL
-    password: process.env.DB_PASSWORD, // la password dell'utente
-    database: 'Sql1831185_2', // il nome del tuo database
+    host: 'localhost', // o l'indirizzo del tuo server MySQL
+    user: "alessioboscolo", // l'utente MySQL
+    password: "alessioboscolo", // la password dell'utente
+    database: 'incucinacondebora', // il nome del tuo database
   };
 }
 

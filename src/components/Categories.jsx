@@ -10,7 +10,7 @@ function Categories() {
 
   React.useEffect(() => {
     fetchCategories();
-  }, [categories]);
+  },1);
 
   const fetchCategories = async () => {
     try {

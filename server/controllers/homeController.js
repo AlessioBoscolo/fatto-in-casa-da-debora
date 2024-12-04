@@ -4,10 +4,10 @@ const homeController = {
   getCategory: async (req, res) => {
     try {
       const query = "SELECT * FROM categoria ORDER BY id_categoria ASC";
-      const result = await pool.query(query);
+      const [rows] = await pool.query(query);
 
       // Send all rows as response
-      res.status(200).json(result.rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching categories:", error);
       res.status(500).json({

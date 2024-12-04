@@ -5,13 +5,13 @@ const categoryController = {
     try {
       const { id_categoria } = req.body;
 
-      const result = await pool.query(
-        "SELECT * FROM ricetta WHERE id_categoria = $1",
+      const [rows] = await pool.query(
+        "SELECT * FROM ricetta WHERE id_categoria = ?",
         [id_categoria]
       );
 
       // Send all rows as response
-      res.status(200).json(result.rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching recipes:", error);
       res.status(500).json({
@@ -24,13 +24,15 @@ const categoryController = {
     try {
       const { nrRandomRecipe } = req.body;
 
-      const result = await pool.query(
-        "SELECT * FROM ricetta ORDER BY RANDOM() LIMIT $1",
-        [nrRandomRecipe]
+      const randomRecipe = parseInt(nrRandomRecipe);
+
+      const [rows] = await pool.query(
+        'SELECT * FROM ricetta ORDER BY RAND() LIMIT ?',
+        [randomRecipe]
       );
 
       // Send all rows as response
-      res.status(200).json(result.rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching recipes:", error);
       res.status(500).json({
@@ -43,13 +45,13 @@ const categoryController = {
     try {
       const { id_categorias } = req.body;
       
-      const result = await pool.query(
-        "SELECT * FROM categoria WHERE id_categoria = $1",
+      const [rows] = await pool.query(
+        "SELECT * FROM categoria WHERE id_categoria = ?",
         [id_categorias]
       );
 
       // Send all rows as response
-      res.status(200).json(result.rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching recipes:", error);
       res.status(500).json({
