@@ -14,7 +14,7 @@ function List(props) {
     if (props.title === "category") {
       fetchCategories();
     }
-  },1);
+  },[1]);
 
   const fetchCategories = async () => {
     try {
