@@ -1,5 +1,5 @@
 const getApiUrl = () => {
-  const environment = "development";
+  const environment = "production";
 
   if (environment === "production") {
     return "https://api.incucinacondebora.it";

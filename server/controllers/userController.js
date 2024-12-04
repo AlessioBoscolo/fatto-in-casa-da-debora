@@ -9,12 +9,13 @@ const userController = {
       const { name, surname, email, password } = req.body;
 
       // Check if user already exists
-      const userExists = await pool.query(
-        "SELECT nome, cognome FROM utente WHERE email_utente = $1",
+      const [userExists] = await pool.query(
+        "SELECT nome_utente, cognome_utente FROM utente WHERE email_utente = ?",
         [email]
       );
 
-      if (userExists.rows.length > 0) {
+
+      if (userExists.length > 0) {
         return res.status(400).json({ error: "User already exists" });
       }
 
@@ -25,11 +26,9 @@ const userController = {
       // const hash2 = await bcrypt.hash(password, saltRounds);
       // Insert new user
       const result = await pool.query(
-        "INSERT INTO utente (nome_utente, cognome_utente, email_utente, password_utente) VALUES ($1, $2, $3, $4) RETURNING id_utente, nome_utente, email_utente",
-        [name, surname, email, hash]
+        "INSERT INTO utente (nome_utente, cognome_utente, email_utente, password_utente, permesso_utente) VALUES (?, ?, ?, ?, ?)",
+        [name, surname, email, hash, 0]
       );
-
-      res.json(result.rows[0]);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: err.message });
@@ -44,7 +43,7 @@ const userController = {
 
       // Find user
       const result = await pool.query(
-        "SELECT * FROM utente WHERE email_utente = $1",
+        "SELECT * FROM utente WHERE email_utente = ?",
         [email]
       );
 
@@ -88,9 +87,9 @@ const userController = {
   test: async (req, res) => {
     try {
       // Find user
-      const [rows] = await pool.query("SELECT * FROM utente");
-
-      res.json(rows);
+      //const [rows] = await pool.query("SELECT * FROM utente");
+      //console.log(rows)
+      res.json("test");
     } catch (err) {
       console.error(err.message);
       res.status(500).json({ error: "Server error" });

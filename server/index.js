@@ -18,7 +18,8 @@ app.use('/api/home', homeRoutes);
 app.use('/api/category', categoryRoutes);
 
 const PORT = process.env.PORT || 3001;
-if(!isDevelopment){
+if(!isDevelopment()){
+  console.log("Connessione Certificata");
   const privateKey = fs.readFileSync('/etc/letsencrypt/live/api.incucinacondebora.it/privkey.pem', 'utf8');
   const certificate = fs.readFileSync('/etc/letsencrypt/live/api.incucinacondebora.it/cert.pem', 'utf8');
   const ca = fs.readFileSync('/etc/letsencrypt/live/api.incucinacondebora.it/chain.pem', 'utf8');
