@@ -88,7 +88,7 @@ const userController = {
   test: async (req, res) => {
     try {
       // Find user
-      const [rows] = await pool.query("SELECT * FROM test_table");
+      const [rows] = await pool.query("SELECT * FROM utente");
 
       res.json(rows);
     } catch (err) {

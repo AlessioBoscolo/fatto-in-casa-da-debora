@@ -7,13 +7,15 @@ import Input from "./Input";
 
 // Iwmporting form field
 import userAccess from "../../dynamic/formValues";
+import { showToast } from '../Toast/Toast';
 
 // Importing auth info
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-// Importing toast
-import { showToast } from '../Toast/Toast';
+const { apiUrl } = require('../../config/apiConfig');
+
+
 
 function Form(props) {
   const isRegistered = props.isRegistered;
@@ -33,7 +35,7 @@ function Form(props) {
 
     try {
       const endpoint = isRegistered ? "/api/user/login" : "/api/user/register";
-      const response = await fetch(`http://api.incucinacondebora.it:3001${endpoint}`, {
+      const response = await fetch(`${apiUrl}:3001${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

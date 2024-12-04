@@ -4,6 +4,9 @@ import typeList from "../../dynamic/listValues";
 
 import { useAuth } from "../../context/AuthContext";
 
+const { apiUrl } = require('../../config/apiConfig');
+
+
 function List(props) {
   const [categories, setCategories] = React.useState([]);
 
@@ -16,7 +19,7 @@ function List(props) {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "http://api.incucinacondebora.it:3001/api/home/getCategory",
+        `${apiUrl}:3001/api/home/getCategory`,
         {
           method: "GET",
           headers: {

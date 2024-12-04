@@ -2,6 +2,9 @@ import React from "react";
 
 import Card from "./Card";
 
+const { apiUrl } = require('../../config/apiConfig');
+
+
 function Cards(props) {
   const id_categoria = props.id_categoria;
   const [functChoose, setFunctChoose] = React.useState([]);
@@ -21,7 +24,7 @@ function Cards(props) {
   const fetchRecipe = async () => {
     try {
       const response = await fetch(
-        "http://api.incucinacondebora.it:3001/api/category/getRecipe",
+        `${apiUrl}:3001/api/category/getRecipe`,
         {
           method: "POST",
           headers: {
@@ -45,7 +48,7 @@ function Cards(props) {
   const fetchRandomRecipe = async () => {
     try {
       const response = await fetch(
-        "http://api.incucinacondebora.it:3001/api/category/getRandomRecipe",
+        `${apiUrl}:3001/api/category/getRandomRecipe`,
         {
           method: "POST",
           headers: {

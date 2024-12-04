@@ -4,6 +4,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from "./Image";
 
+const { apiUrl } = require('../config/apiConfig');
+
 function Carousel(props) {
   const [randomRecipe, setRandomRecipe] = React.useState([]);
 
@@ -14,7 +16,7 @@ function Carousel(props) {
   const fetchRandomRecipe = async () => {
     try {
       const response = await fetch(
-        "http://api.incucinacondebora.it:3001/api/category/getRandomRecipe",
+        `${apiUrl}:3001/api/category/getRandomRecipe`,
         {
           method: "POST",
           headers: {

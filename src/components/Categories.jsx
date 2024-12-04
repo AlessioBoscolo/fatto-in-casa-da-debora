@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import Image from "./Image";
 
+const { apiUrl } = require('../config/apiConfig');
+
 function Categories() {
   const [categories, setCategories] = React.useState([]);
 
@@ -13,7 +15,7 @@ function Categories() {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "http://api.incucinacondebora.it:3001/api/home/getCategory",
+        `${apiUrl}:3001/api/home/getCategory`,
         {
           method: "GET",
           headers: {

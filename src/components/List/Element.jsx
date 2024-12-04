@@ -4,13 +4,16 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+const { apiUrl } = require('../../config/apiConfig');
+
+
 function Element(props) {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://api.incucinacondebora.it:3001/api/user/logout", {
+      const response = await fetch(`${apiUrl}:3001/api/user/logout`, {
         method: "POST",
       });
 

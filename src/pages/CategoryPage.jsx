@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Cards from "../components/Cards/Cards";
 
+const { apiUrl } = require('../config/apiConfig');
+
 function CategoryPage() {
   const { id_categoria } = useParams();
   const [categoryName, setCategoryName] = React.useState([]);
@@ -15,7 +17,7 @@ function CategoryPage() {
   const fetchNameCategory = async () => {
     try {
       const response = await fetch(
-        "http://api.incucinacondebora.it:3001/api/category/getNameCategory",
+        `${apiUrl}:3001/api/category/getNameCategory`,
         {
           method: "POST",
           headers: {
