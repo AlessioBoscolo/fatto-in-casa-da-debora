@@ -13,7 +13,7 @@ function Categories() {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3001/api/home/getCategory",
+        "http://api.incucinacondebora.it:3001/api/home/getCategory",
         {
           method: "GET",
           headers: {

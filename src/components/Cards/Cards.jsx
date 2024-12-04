@@ -21,7 +21,7 @@ function Cards(props) {
   const fetchRecipe = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3001/api/category/getRecipe",
+        "http://api.incucinacondebora.it:3001/api/category/getRecipe",
         {
           method: "POST",
           headers: {
@@ -45,7 +45,7 @@ function Cards(props) {
   const fetchRandomRecipe = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3001/api/category/getRandomRecipe",
+        "http://api.incucinacondebora.it:3001/api/category/getRandomRecipe",
         {
           method: "POST",
           headers: {
