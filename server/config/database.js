@@ -16,8 +16,8 @@ if (!isDevelopment()) {
   //use test database
   config = {
     host: 'localhost', // o l'indirizzo del tuo server MySQL
-    user: "alessioboscolo", // l'utente MySQL
-    password: "alessioboscolo", // la password dell'utente
+    user: "root", // l'utente MySQL
+    password: "", // la password dell'utente
     database: 'incucinacondebora', // il nome del tuo database
   };
 }
