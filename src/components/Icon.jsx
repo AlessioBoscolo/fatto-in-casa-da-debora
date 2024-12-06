@@ -7,7 +7,7 @@ function Icon(props) {
         return (
           <span className="relative">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               width="20px"
               height="20px"
               className="cursor-pointer fill-[#000] hover:fill-[#007bff] inline-block"
@@ -31,7 +31,7 @@ function Icon(props) {
         return (
           <span className="relative">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               width="20px"
               className="cursor-pointer fill-[#000] hover:fill-[#007bff] inline-block"
               viewBox="0 0 64 64"
@@ -54,7 +54,7 @@ function Icon(props) {
         return (
           <span className="relative">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               width="20px"
               className="cursor-pointer fill-[#000] hover:fill-[#007bff] inline-block"
               viewBox="0 0 371.263 371.263"
@@ -78,7 +78,7 @@ function Icon(props) {
             className="w-7 h-7"
             fill="#000"
             viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
           >
             <path
               fillRule="evenodd"
@@ -91,7 +91,7 @@ function Icon(props) {
       case "close-menu":
         return (
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
             className="w-4 fill-black"
             viewBox="0 0 320.591 320.591"
           >
@@ -110,7 +110,7 @@ function Icon(props) {
       case "search":
         return (
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
             viewBox="0 0 192.904 192.904"
             width="16px"
             className="fill-gray-600 mr-3 rotate-90"
