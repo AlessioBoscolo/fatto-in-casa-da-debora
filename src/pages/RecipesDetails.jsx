@@ -56,7 +56,7 @@ function RecipeDetails() {
   function writeIngredients() {
     return Object.entries(Ingredients).map(([key, field]) => (
       <li key={key}>
-        {field.unita_misura_ingrediente_ricetta !== "q.b." &&
+        {field.unita_misura_ingrediente_ricetta !== "q.b." && field.quantita_ingrediente > 0 &&
           (
             (field.quantita_ingrediente / RecipeDetails.porzioni_ricetta) *
             porzioni
