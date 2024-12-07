@@ -54,7 +54,7 @@ function Footer() {
         <hr className="my-6 border-white sm:mx-auto lg:my-8" />
         <div className="sm:flex sm:items-end sm:justify-between">
           <span className="text-sm text-white sm:text-center">
-            © 2024 Fatto in casa da Debora™ . All Rights Reserved.
+            © 2024 In cucina con Debora™ . All Rights Reserved.
           </span>
         </div>
       </div>

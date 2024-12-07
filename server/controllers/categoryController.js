@@ -5,10 +5,11 @@ const categoryController = {
     try {
       const { id_categoria } = req.body;
 
-      const [rows] = await pool.query(
-        "SELECT * FROM ricetta WHERE id_categoria = ?",
-        [id_categoria]
-      );
+      const query =
+        id_categoria == 14
+          ? "SELECT * FROM ricetta WHERE nome_ricetta <> ''"
+          : "SELECT * FROM ricetta WHERE id_categoria = ? AND nome_ricetta <> ''";
+      const [rows] = await pool.query(query, [id_categoria]);
 
       // Send all rows as response
       res.status(200).json(rows);
@@ -27,7 +28,7 @@ const categoryController = {
       const randomRecipe = parseInt(nrRandomRecipe);
 
       const [rows] = await pool.query(
-        'SELECT * FROM ricetta ORDER BY RAND() LIMIT ?',
+        'SELECT * FROM ricetta WHERE nome_ricetta <> "" ORDER BY RAND() LIMIT ?',
         [randomRecipe]
       );
 
@@ -44,7 +45,7 @@ const categoryController = {
   getNameCategory: async (req, res) => {
     try {
       const { id_categorias } = req.body;
-      
+
       const [rows] = await pool.query(
         "SELECT * FROM categoria WHERE id_categoria = ?",
         [id_categorias]

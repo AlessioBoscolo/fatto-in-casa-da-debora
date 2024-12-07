@@ -2,13 +2,11 @@ import React from "react";
 
 import Card from "./Card";
 
-const { apiUrl } = require('../../config/apiConfig');
-
+const { apiUrl } = require("../../config/apiConfig");
 
 function Cards(props) {
   const id_categoria = props.id_categoria;
   const [functChoose, setFunctChoose] = React.useState([]);
-
 
   React.useEffect(() => {
     switch (props.title) {
@@ -18,23 +16,22 @@ function Cards(props) {
       case "randomRecipe":
         fetchRandomRecipe();
         break;
+      default:
+        break;
     }
   }, [props.title, id_categoria, props.nrRandomRecipe]);
 
   const fetchRecipe = async () => {
     try {
-      const response = await fetch(
-        `${apiUrl}:3001/api/category/getRecipe`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id_categoria: id_categoria,
-          }),
-        }
-      );
+      const response = await fetch(`${apiUrl}:3001/api/category/getRecipe`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_categoria: id_categoria,
+        }),
+      });
 
       if (response.ok) {
         const retrievedData = await response.json();
@@ -75,6 +72,7 @@ function Cards(props) {
         key={key}
         title={field.nome_ricetta}
         src={field.image_path_ricetta}
+        id_ricetta={field.id_ricetta}
         desc=""
       />
     ));

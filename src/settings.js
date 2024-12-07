@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import App from "./App";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
+import RecipeDetails from "./pages/RecipesDetails";
 
 const route = createBrowserRouter([
   {
@@ -28,6 +29,14 @@ const route = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <CategoryPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/ricetta/:id_recipe",  // :id è un parametro dinamico
+    element: (
+      <ProtectedRoute>
+        <RecipeDetails />
       </ProtectedRoute>
     ),
   },

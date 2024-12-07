@@ -7,6 +7,7 @@ const { apiUrl, isDevelopment } = require('./config/apiConfig');
 const userRoutes = require('./routes/userRoutes');
 const homeRoutes = require('./routes/homeRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const recipeRoutes = require('./routes/recipeRoutes');
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/user', userRoutes);
 app.use('/api/home', homeRoutes);
 app.use('/api/category', categoryRoutes);
+app.use('/api/recipe', recipeRoutes);
 
 const PORT = process.env.PORT || 3001;
 if(!isDevelopment()){
