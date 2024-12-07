@@ -9,7 +9,7 @@ function Footer() {
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0 bg-white rounded-xl">
             <Image
-              src="./images/logo.png"
+              src="https://i.imgur.com/UCl4JMG.png"
               className="me-3"
               alt="Fatto in casa da Debora Logo"
             />

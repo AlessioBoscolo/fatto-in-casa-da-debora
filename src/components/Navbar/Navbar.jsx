@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import Image from "../Image";
 import List from "../List/List";
 import Icon from "../Icon";
-import Search from "../Search";
 
 function Navbar() {
   function handleClick() {
