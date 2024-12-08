@@ -6,6 +6,7 @@ import App from "./App";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import RecipeDetails from "./pages/RecipesDetails";
+import InsertRecipe from "./pages/InsertRecipe";
 
 const route = createBrowserRouter([
   {
@@ -21,6 +22,14 @@ const route = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Home />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/ricetta/inserisci",
+    element: (
+      <ProtectedRoute>
+        <InsertRecipe />
       </ProtectedRoute>
     ),
   },

@@ -8,7 +8,7 @@ const typeList = {
     },
     choose_2: {
       name: "Inserisci Ricetta",
-      path: "/home",
+      path: "/ricetta/inserisci",
       click: null,
       permission: "2",
     },
@@ -16,16 +16,6 @@ const typeList = {
       name: "Logout",
       path: null,
       click: "handleLogout",
-      permission: "1",
-    },
-  },
-  followUs: {
-    choose_1: {
-      name: "Instagram",
-      permission: "1",
-    },
-    choose_2: {
-      name: "Facebook",
       permission: "1",
     },
   },
