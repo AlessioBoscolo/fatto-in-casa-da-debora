@@ -56,17 +56,23 @@ function RecipeDetails() {
   };
 
   function writeIngredients() {
-    return Object.entries(Ingredients).map(([key, field]) => (
-      <li key={key}>
-        {field.nome_unita_misura !== "q.b." && field.quantita_ingrediente > 0 &&
-          (
-            (field.quantita_ingrediente / RecipeDetails.porzioni_ricetta) *
-            porzioni
-          ).toFixed(1)}{" "}
-        {field.nome_unita_misura}{" "}
-        <span className="font-bold">{field.nome_ingrediente}</span>
-      </li>
-    ));
+    return Object.entries(Ingredients).map(([key, field]) => {
+      let quantity = '';
+      if (field.nome_unita_misura !== "q.b." && field.quantita_ingrediente > 0) {
+        const calculatedQuantity = (field.quantita_ingrediente / RecipeDetails.porzioni_ricetta) * porzioni;
+        // Converti in stringa e rimuovi gli zeri non necessari dopo il decimale
+        quantity = calculatedQuantity % 1 === 0 
+          ? Math.round(calculatedQuantity).toString()
+          : calculatedQuantity.toFixed(1).replace(/\.?0+$/, '');
+      }
+
+      return (
+        <li key={key}>
+          {quantity} {field.nome_unita_misura}{" "}
+          <span className="font-bold">{field.nome_ingrediente}</span>
+        </li>
+      );
+    });
   }
 
   const { user } = useAuth();
