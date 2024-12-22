@@ -121,6 +121,63 @@ const recipeController = {
       });
     }
   },
+
+  saveUpdateRecipe: async (req, res) => {
+    try {
+      const {
+        id_ricetta,
+        porzioni_recipe,
+        ingredienti_recipe,
+        recipe_details,
+      } = req.body;
+
+      const query =
+        "UPDATE ricetta SET porzioni_ricetta = ?, preparazione_ricetta = ?, note_ricetta = ?, nome_ricetta = ?, image_path_ricetta = ? WHERE id_ricetta = ?";
+      await pool.query(query, [
+        porzioni_recipe,
+        recipe_details.preparazione_ricetta,
+        recipe_details.note_ricetta,
+        recipe_details.nome_ricetta,
+        recipe_details.image_path_ricetta,
+        id_ricetta,
+      ]);
+
+      // Prima elimina tutti gli ingredienti esistenti per questa ricetta
+      const deleteQuery =
+        "DELETE FROM ingrediente_ricetta WHERE id_ricetta = ?";
+      await pool.query(deleteQuery, [id_ricetta]);
+
+      // Poi inserisci i nuovi ingredienti
+      const insertQuery =
+        "INSERT INTO ingrediente_ricetta(quantita_ingrediente, id_ingrediente, id_ricetta, id_unita_misura) VALUES(?, ?, ?, ?)";
+      for (const ingredient of ingredienti_recipe) {
+        await pool.query(insertQuery, [
+          ingredient.quantita_ingrediente,
+          ingredient.id_ingrediente,
+          id_ricetta,
+          ingredient.id_unita_misura,
+        ]);
+      }
+
+      const query2 =
+        "UPDATE ingrediente SET nome_ingrediente = ? WHERE id_ingrediente = ?";
+      for (const ingredient of ingredienti_recipe) {
+        await pool.query(query2, [
+          ingredient.nome_ingrediente,
+          ingredient.id_ingrediente,
+        ]);
+      }
+      res.status(200).json({
+        message: "Recipe updated successfully",
+      });
+    } catch (error) {
+      console.error("Error inserting ingredients:", error);
+      res.status(500).json({
+        message: "Error inserting ingredients",
+        error: error.message,
+      });
+    }
+  },
 };
 
 module.exports = recipeController;

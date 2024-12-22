@@ -1,9 +1,11 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import Navbar from "../components/Navbar/Navbar";
 import Image from "../components/Image";
 import Footer from "../components/Footer";
+
+import { useAuth } from "../context/AuthContext";
 
 const { apiUrl } = require("../config/apiConfig");
 
@@ -14,6 +16,31 @@ function RecipeDetails() {
   const [porzioni, setPorzioni] = React.useState(1);
 
   React.useEffect(() => {
+    const fetchRecipeDetails = async () => {
+      try {
+        const response = await fetch(
+          `${apiUrl}:3001/api/recipe/getRecipeDetails`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id_ricetta: id_recipe,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const retrievedData = await response.json();
+          setRecipeDetails(retrievedData.recipe);
+          setIngredients(retrievedData.ingredients);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
     fetchRecipeDetails();
   }, [id_recipe]);
 
@@ -26,31 +53,6 @@ function RecipeDetails() {
   const handlePorzioniChange = (e) => {
     const value = parseInt(e.target.value) || 1;
     setPorzioni(Math.max(1, value));
-  };
-
-  const fetchRecipeDetails = async () => {
-    try {
-      const response = await fetch(
-        `${apiUrl}:3001/api/recipe/getRecipeDetails`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id_ricetta: id_recipe,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const retrievedData = await response.json();
-        setRecipeDetails(retrievedData.recipe);
-        setIngredients(retrievedData.ingredients);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   function writeIngredients() {
@@ -66,6 +68,9 @@ function RecipeDetails() {
       </li>
     ));
   }
+
+  const { user } = useAuth();
+
 
   return (
     <>
@@ -123,6 +128,8 @@ function RecipeDetails() {
             </React.Fragment>
           ))}
         </div>
+        
+        {user.permesso_utente > 1 && <Link to={`/ricetta/${id_recipe}/modifica`} className="btn bg-yellow-500 hover:bg-yellow-700 w-full md:w-auto mb-8">Modifica Ricetta</Link>}
       </div>
       <Footer />
     </>

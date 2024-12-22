@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import RecipeDetails from "./pages/RecipesDetails";
 import InsertRecipe from "./pages/InsertRecipe";
+import UpdateRecipe from "./pages/UpdateRecipe";
 
 const route = createBrowserRouter([
   {
@@ -46,6 +47,14 @@ const route = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <RecipeDetails />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/ricetta/:id_recipe/modifica",  // :id è un parametro dinamico
+    element: (
+      <ProtectedRoute>
+        <UpdateRecipe />
       </ProtectedRoute>
     ),
   },
