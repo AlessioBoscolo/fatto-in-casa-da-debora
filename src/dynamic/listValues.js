@@ -6,6 +6,12 @@ const typeList = {
       click: null,
       permission: "3",
     },
+    choose_1: {
+      name: "Menu",
+      path: "/menu",
+      click: null,
+      permission: "1",
+    },
     choose_2: {
       name: "Inserisci Ricetta",
       path: "/ricetta/inserisci",

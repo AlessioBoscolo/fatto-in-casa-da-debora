@@ -1,18 +1,35 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import Icon from "./Icon";
-import Input from "./Form/Input";
 
 function Search() {
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/ricerca/${encodeURIComponent(searchTerm.trim())}`);
+    }
+    
+  };
+
   return (
-    <div className="bg-gray-100 border-transparent focus-within:border-blue-500 focus-within:bg-transparent flex px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6">
+    <form
+      onSubmit={handleSearch}
+      className="bg-gray-100 border-transparent focus-within:border-blue-500 focus-within:bg-transparent flex px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6"
+    >
       <Icon title="search"></Icon>
-      <Input
+      <input
         type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Cerca..."
         className="w-full outline-none bg-transparent text-gray-600 font-semibold text-[15px]"
+        name="element_searched"
       />
-    </div>
+    </form>
   );
 }
 

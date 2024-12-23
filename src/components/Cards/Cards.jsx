@@ -16,6 +16,8 @@ function Cards(props) {
       case "randomRecipe":
         fetchRandomRecipe();
         break;
+      case "search":
+        fetchSearchRecipes();
       default:
         break;
     }
@@ -63,6 +65,26 @@ function Cards(props) {
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+
+  const elementToSearch = props.elementToSearch;
+  const fetchSearchRecipes = async () => {
+    try {
+      const response = await fetch(`${apiUrl}:3001/api/recipe/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ searchedTerm: elementToSearch }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFunctChoose(data.recipes);
+      }
+    } catch (error) {
+      console.error("Error searching recipes:", error);
     }
   };
 

@@ -8,8 +8,10 @@ import CategoryPage from "./pages/CategoryPage";
 import RecipeDetails from "./pages/RecipesDetails";
 import InsertRecipe from "./pages/InsertRecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
+import SearchResults from "./pages/SearchResults";
+import Menu from "./pages/Menu";
 
-const route = createBrowserRouter([
+const routes = createBrowserRouter([
   {
     path: "/",
     element: <App></App>,
@@ -35,7 +37,7 @@ const route = createBrowserRouter([
     ),
   },
   {
-    path: "/categoria/:id_categoria",  // :id è un parametro dinamico
+    path: "/categoria/:id_categoria", // :id è un parametro dinamico
     element: (
       <ProtectedRoute>
         <CategoryPage />
@@ -43,7 +45,7 @@ const route = createBrowserRouter([
     ),
   },
   {
-    path: "/ricetta/:id_recipe",  // :id è un parametro dinamico
+    path: "/ricetta/:id_recipe", // :id è un parametro dinamico
     element: (
       <ProtectedRoute>
         <RecipeDetails />
@@ -51,13 +53,30 @@ const route = createBrowserRouter([
     ),
   },
   {
-    path: "/ricetta/:id_recipe/modifica",  // :id è un parametro dinamico
+    path: "/ricetta/:id_recipe/modifica", // :id è un parametro dinamico
     element: (
       <ProtectedRoute>
         <UpdateRecipe />
       </ProtectedRoute>
     ),
   },
+  {
+    path: "/ricerca/:query", // :id è un parametro dinamico
+    element: (
+      <ProtectedRoute>
+        <SearchResults />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/menu", // :id è un parametro dinamico
+    element: (
+      <ProtectedRoute>
+        <Menu />
+      </ProtectedRoute>
+    ),
+  },
 ]);
 
-export default route;
+export default routes;
