@@ -16,6 +16,7 @@ if (!isDevelopment()) {
   //use test database
   config = {
     host: 'localhost', // o l'indirizzo del tuo server MySQL
+    port: 3308,
     user: "root", // l'utente MySQL
     password: "", // la password dell'utente
     database: 'incucinacondebora', // il nome del tuo database
