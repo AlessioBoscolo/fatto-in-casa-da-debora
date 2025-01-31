@@ -81,7 +81,24 @@ const menuController = {
     }
   },
 
+  getDayConfiguration: async (req, res) => {
+    try {
+      const query = "SELECT * FROM giorno_settimana";
+      const [rows] = await pool.query(query);
 
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching day configuration:", error);
+      res.status(500).json({
+        message: "Error fetching day configuration",
+        error: error.message,
+      });
+    }
+  },
+
+
+  //Insert
   insertMenu: async (req, res) => {
     try {
       const { nome_personalizzato, id_ricetta, id_persona, id_giorno, id_momento } = req.body;
@@ -101,6 +118,25 @@ const menuController = {
       });
     }
   },
+
+  //Delete
+
+  clearMenu: async (req, res) => {
+    try {
+      const query = "DELETE FROM menu";
+      const [rows] = await pool.query(query);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error deleting mwnu element:", error);
+      res.status(500).json({
+        message: "Error deleteing menu element",
+        error: error.message,
+      });
+    }
+  },
+
 
 };
 

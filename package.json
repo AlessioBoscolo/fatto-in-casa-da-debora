@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "source": "./public/index.html",
-  "config":{
+  "config": {
     "development": "http://localhost",
     "production": "https://api.incucinacondebora.it"
   },
@@ -27,6 +27,7 @@
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.6",
     "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.15.10",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

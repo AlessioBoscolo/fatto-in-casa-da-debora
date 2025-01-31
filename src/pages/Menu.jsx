@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer";
 import { showToast } from "../components/Toast/Toast";
+import Swal from "sweetalert2";
 
 const { apiUrl } = require("../config/apiConfig");
 
@@ -10,6 +12,7 @@ function Menu() {
   const [dayMoment, setDayMoment] = React.useState({});
   const [recipe, setRecipe] = React.useState([]);
   const [people, setPeople] = React.useState([]);
+  const [dayConfiguration, setDayConfiguration] = React.useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCell, setSelectedCell] = useState({ day: null, moment: null });
   const [selectedRecipe, setSelectedRecipe] = useState("");
@@ -107,12 +110,95 @@ function Menu() {
       }
     };
 
+    const fetchDayConfiguration = async () => {
+      try {
+        const response = await fetch(`${apiUrl}:3001/api/menu/getDayConfiguration`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const retrievedData = await response.json();
+          setDayConfiguration(retrievedData);
+        } else {
+          console.error('Day Configuration API error:', response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching day configuration:", error);
+      }
+    };
+
+
     fetchWeekDay();
     fetchDayMoment();
     fetchAllRecipe();
     fetchPeople();
     fetchMenuItems();
+    fetchDayConfiguration();
   }, []);
+
+  const clearMenu = async () => {
+    try {
+      const response = await fetch(`${apiUrl}:3001/api/menu/clearMenu`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error:", error);
+      return false;
+    }
+  };
+
+  async function openConfirmDelete() {
+    Swal.fire({
+      title: 'Sei sicuro?',
+      text: 'Vuoi svuotare il menù?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, svuota!',
+      cancelButtonText: 'Annulla'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const success = await clearMenu();
+        
+        if (success) {
+          Swal.fire(
+            'Eliminato!',
+            'Il menù è stato svuotato.',
+            'success'
+          );
+          // Ricarica i menu dopo la pulizia
+          const menuResponse = await fetch(`${apiUrl}:3001/api/menu/getMenu`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (menuResponse.ok) {
+            const retrievedData = await menuResponse.json();
+            setMenuItems(retrievedData);
+          }
+        } else {
+          Swal.fire(
+            'Errore!',
+            'Si è verificato un errore durante lo svuotamento del menù.',
+            'error'
+          );
+        }
+      }
+    });
+  }
 
   function insertDayRecipe(id_giorno, id_momento) {
     setSelectedCell({ day: id_giorno, moment: id_momento });
@@ -126,6 +212,10 @@ function Menu() {
 
   function writeHeader() {
     return Object.entries(weekDay).map(([key, field]) => {
+      const dayConfig = dayConfiguration.find(
+        config => config.id_giorno_settimana === parseInt(key)
+      );
+      
       return (
         <th
           key={key}
@@ -133,6 +223,9 @@ function Menu() {
           className="border-e border-neutral-200 px-6 py-4"
         >
           {field.nome_giorno_settimana}
+          {dayConfig && (
+            <span className="ml-2">{dayConfig.numero_giorno_settimana}</span>
+          )}
         </th>
       );
     });
@@ -145,14 +238,16 @@ function Menu() {
       2: "bg-green-100",
       3: "bg-yellow-100",
       4: "bg-purple-100",
-      5: "bg-pink-100"
+      5: "bg-pink-100",
     };
 
     return Object.entries(dayMoment).map(([momentKey, field]) => {
       const cells = Array.from({ length: 7 }, (_, dayIndex) => {
-        const cellMenuItems = menuItems.filter(item => {
-          return item.id_giorno_settimana === dayIndex && 
-                 item.id_momento_giornata === field.id_momento_giornata;
+        const cellMenuItems = menuItems.filter((item) => {
+          return (
+            item.id_giorno_settimana === dayIndex &&
+            item.id_momento_giornata === field.id_momento_giornata
+          );
         });
 
         return (
@@ -165,14 +260,21 @@ function Menu() {
             {cellMenuItems.length > 0 ? (
               <div className="space-y-2">
                 {cellMenuItems.map((menuItem, index) => (
-                  <div 
-                    key={menuItem.id_menu} 
-                    className={`${personColors[menuItem.id_persona] || 'bg-gray-100'} 
+                  <div
+                    key={menuItem.id_menu}
+                    className={`${
+                      personColors[menuItem.id_persona] || "bg-gray-100"
+                    } 
                                border-b last:border-b-0 pb-2 last:pb-0 
                                rounded p-2`}
                   >
-                    <div>{menuItem.nome_ricetta_personalizzata || menuItem.nome_ricetta}</div>
-                    <div className="text-xs text-gray-500">{menuItem.nome_persona}</div>
+                    <div>
+                      {menuItem.nome_ricetta_personalizzata ||
+                        menuItem.nome_ricetta}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {menuItem.nome_persona}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -221,7 +323,7 @@ function Menu() {
           id_ricetta: e.target.id_ricetta.value,
           id_persona: e.target.id_persona.value,
           id_giorno: selectedCell.day,
-          id_momento: selectedCell.moment
+          id_momento: selectedCell.moment,
         }),
       });
 
@@ -229,7 +331,7 @@ function Menu() {
         setIsModalOpen(false);
         showToast("success", "Ricetta inserita con successo!");
         e.target.nome_personalizzato.value = "";
-        
+
         // Ricarica i menu dopo l'inserimento
         const menuResponse = await fetch(`${apiUrl}:3001/api/menu/getMenu`, {
           method: "GET",
@@ -251,7 +353,7 @@ function Menu() {
   return (
     <>
       <Navbar />
-      <div className="flex overflow-x-auto">
+      <div className="flex overflow-x-auto mt-4">
         <table className="min-w-full border border-neutral-200 text-center text-sm font-light text-surface">
           <thead className="border-b border-neutral-200 font-medium">
             <tr>
@@ -263,6 +365,28 @@ function Menu() {
           </thead>
           <tbody>{writeContent()}</tbody>
         </table>
+      </div>
+      <div className="grid grid-cols-2">
+        <div className="text-center">
+          <button className="btn bg-green-400 hover:bg-green-500 mt-4">
+            Salva menù
+          </button>
+          <br />
+          <button className="btn bg-blue-400 hover:bg-blue-500 mt-4">
+            Configurazione menù
+          </button>
+        </div>
+        <div className="text-center">
+          <button onClick={() => openConfirmDelete()} className="btn bg-red-400 hover:bg-red-500 mt-4">
+            Svuota menù
+          </button>
+          <br />
+          <Link to="/archivio">
+            <button className="btn bg-yellow-400 hover:bg-yellow-500 mt-4">
+              Archivio menù
+            </button>
+          </Link>
+        </div>
       </div>
 
       {isModalOpen && (

@@ -10,6 +10,7 @@ import InsertRecipe from "./pages/InsertRecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
 import SearchResults from "./pages/SearchResults";
 import Menu from "./pages/Menu";
+import Archivio from "./pages/Archivio";
 
 const routes = createBrowserRouter([
   {
@@ -74,6 +75,15 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Menu />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/archivio", // :id è un parametro dinamico
+    element: (
+      <ProtectedRoute>
+        <Archivio />
       </ProtectedRoute>
     ),
   },
