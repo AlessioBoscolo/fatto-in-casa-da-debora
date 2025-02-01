@@ -35,7 +35,7 @@ const menuController = {
 
   getAllRecipe: async (req, res) => {
     try {
-      const query = "SELECT id_ricetta, nome_ricetta FROM ricetta";
+      const query = "SELECT id_ricetta, nome_ricetta FROM ricetta ORDER BY nome_ricetta ASC";
       const [rows] = await pool.query(query);
 
       // Send all rows as response
