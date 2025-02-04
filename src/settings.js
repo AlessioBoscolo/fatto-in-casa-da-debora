@@ -9,8 +9,9 @@ import RecipeDetails from "./pages/RecipesDetails";
 import InsertRecipe from "./pages/InsertRecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
 import SearchResults from "./pages/SearchResults";
-import Menu from "./pages/Menu";
-import Archivio from "./pages/Archivio";
+import Menu from "./pages/Menu/Menu";
+import Archivio from "./pages/Menu/Archivio";
+import ModifyMenuDay from "./pages/Menu/ModifyMenuDay";
 
 const routes = createBrowserRouter([
   {
@@ -80,10 +81,19 @@ const routes = createBrowserRouter([
   },
 
   {
-    path: "/archivio", // :id è un parametro dinamico
+    path: "menu/archivio", // :id è un parametro dinamico
     element: (
       <ProtectedRoute>
         <Archivio />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "menu/modificaMenu",
+    element: (
+      <ProtectedRoute>
+        <ModifyMenuDay />
       </ProtectedRoute>
     ),
   },

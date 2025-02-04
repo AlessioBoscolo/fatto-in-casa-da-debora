@@ -12,5 +12,11 @@ router.get('/clearMenu', menuController.clearMenu);
 router.get('/getDayConfiguration', menuController.getDayConfiguration);
 
 router.post('/insertMenu', menuController.insertMenu);
+router.post('/getDaysElement', menuController.getDaysElement);
+router.post('/deleteMenuElement', menuController.deleteMenuElement);
+router.post('/updateMenuElement', menuController.updateMenuElement);
+router.post('/updateDayConfiguration', menuController.updateDayConfiguration);
+
+
 
 module.exports = router;

@@ -13,7 +13,7 @@ function RecipeDetails() {
   const { id_recipe } = useParams();
   const [RecipeDetails, setRecipeDetails] = React.useState({});
   const [Ingredients, setIngredients] = React.useState([]);
-  const [porzioni, setPorzioni] = React.useState(1);
+  const [porzioni, setPorzioni] = React.useState("");
 
   React.useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -46,21 +46,21 @@ function RecipeDetails() {
 
   React.useEffect(() => {
     if (RecipeDetails && RecipeDetails.porzioni_ricetta) {
-      setPorzioni(Number(RecipeDetails.porzioni_ricetta) || 1);
+      setPorzioni(RecipeDetails.porzioni_ricetta.toString());
     }
   }, [RecipeDetails]);
 
   const handlePorzioniChange = (e) => {
-    const value = parseInt(e.target.value) || 1;
-    setPorzioni(Math.max(1, value));
+    const value = e.target.value;
+    setPorzioni(value);
   };
 
   function writeIngredients() {
     return Object.entries(Ingredients).map(([key, field]) => {
       let quantity = '';
       if (field.nome_unita_misura !== "q.b." && field.quantita_ingrediente > 0) {
-        const calculatedQuantity = (field.quantita_ingrediente / RecipeDetails.porzioni_ricetta) * porzioni;
-        // Converti in stringa e rimuovi gli zeri non necessari dopo il decimale
+        const numericPorzioni = porzioni === "" ? 1 : Math.max(1, parseInt(porzioni) || 1);
+        const calculatedQuantity = (field.quantita_ingrediente / RecipeDetails.porzioni_ricetta) * numericPorzioni;
         quantity = calculatedQuantity % 1 === 0 
           ? Math.round(calculatedQuantity).toString()
           : calculatedQuantity.toFixed(1).replace(/\.?0+$/, '');
