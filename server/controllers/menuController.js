@@ -222,7 +222,6 @@ const menuController = {
   deleteMenuElement: async (req, res) => {
     try {
       const { id_menu } = req.body;
-      console.log(id_menu);
 
       const query = "DELETE FROM menu WHERE id_menu = ?";
       const [rows] = await pool.query(query, [id_menu]);
