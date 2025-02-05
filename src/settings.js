@@ -11,6 +11,7 @@ import UpdateRecipe from "./pages/UpdateRecipe";
 import SearchResults from "./pages/SearchResults";
 import Menu from "./pages/Menu/Menu";
 import Archivio from "./pages/Menu/Archivio";
+import Archivio_Menu from "./pages/Menu/Archivio_Menu";
 import ModifyMenuDay from "./pages/Menu/ModifyMenuDay";
 
 const routes = createBrowserRouter([
@@ -85,6 +86,15 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Archivio />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "menu/archivio/:id_archivio", // :id è un parametro dinamico
+    element: (
+      <ProtectedRoute>
+        <Archivio_Menu />
       </ProtectedRoute>
     ),
   },

@@ -10,12 +10,15 @@ router.get('/getPeople', menuController.getPeople);
 router.get('/getMenu', menuController.getMenu);
 router.get('/clearMenu', menuController.clearMenu);
 router.get('/getDayConfiguration', menuController.getDayConfiguration);
+router.get('/getMenuArchiviati', menuController.getMenuArchiviati);
 
 router.post('/insertMenu', menuController.insertMenu);
 router.post('/getDaysElement', menuController.getDaysElement);
 router.post('/deleteMenuElement', menuController.deleteMenuElement);
 router.post('/updateMenuElement', menuController.updateMenuElement);
 router.post('/updateDayConfiguration', menuController.updateDayConfiguration);
+router.post('/saveMenu', menuController.saveMenu);
+
 
 
 

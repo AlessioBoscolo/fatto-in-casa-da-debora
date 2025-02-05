@@ -118,6 +118,22 @@ const menuController = {
     }
   },
 
+  getMenuArchiviati: async (req, res) => {
+    try {
+      const query = "SELECT * FROM archivio_nome";
+      const [rows] = await pool.query(query);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching menu name:", error);
+      res.status(500).json({
+        message: "Error fetching menu name",
+        error: error.message,
+      });
+    }
+  },
+
   //Insert
   insertMenu: async (req, res) => {
     try {
@@ -147,6 +163,45 @@ const menuController = {
       console.error("Error inserting menu:", error);
       res.status(500).json({
         message: "Error inserting menu",
+        error: error.message,
+      });
+    }
+  },
+
+  saveMenu: async (req, res) => {
+    try {
+      const { nome_menu } = req.body;
+
+      // Insert into archivio_nome and get the ID
+      const query = "INSERT INTO archivio_nome(nome_archivio_nome) VALUES(?)";
+      const [result] = await pool.query(query, [nome_menu]);
+      const archivioId = result.insertId; // Get the auto-generated ID
+
+      const query2 = "SELECT * FROM menu";
+      const [rows] = await pool.query(query2);
+
+      const query3 =
+        "INSERT INTO archivio_menu(ricetta_personalizzata_archivio_menu, id_giorno_settimana, id_ricetta, id_persona, id_momento_giornata, id_archivio_nome) VALUES(?, ?, ?, ?, ?, ?)";
+
+      for (const element of rows) {
+        await pool.query(query3, [
+          element.nome_ricetta_personalizzata,
+          element.id_giorno_settimana,
+          element.id_ricetta,
+          element.id_persona,
+          element.id_momento_giornata,
+          archivioId,
+        ]);
+      }
+
+      res.status(200).json({
+        message: "Menu saving goes successfully",
+        archivioId: archivioId, // Include the ID in the response
+      });
+    } catch (error) {
+      console.error("Error saving menu:", error);
+      res.status(500).json({
+        message: "Error saving menu",
         error: error.message,
       });
     }
