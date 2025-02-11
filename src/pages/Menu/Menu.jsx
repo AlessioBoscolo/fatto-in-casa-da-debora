@@ -4,7 +4,6 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer";
 import { showToast } from "../../components/Toast/Toast";
 import Swal from "sweetalert2";
-import Cookies from 'js-cookie';
 
 const { apiUrl } = require("../../config/apiConfig");
 

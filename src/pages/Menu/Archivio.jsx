@@ -39,29 +39,26 @@ function Archivio() {
     <>
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Menu Archiviati</h1>
+        <h1 className="text-3xl font-bold mb-10">Menu Archiviati</h1>
 
         {menuArchiviati.length === 0 ? (
           <p>Nessun menu archiviato trovato.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ul className="space-y-4">
             {menuArchiviati.map((menu) => (
-              <div
+              <li
                 key={menu.id_archivio_nome}
                 className="border p-4 rounded-lg shadow"
               >
-                <h2 className="text-xl font-semibold">
-                  {menu.nome_archivio_nome}
-                </h2>
                 <Link
                   to={`/menu/archivio/${menu.id_archivio_nome}`}
-                  className="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="text-xl font-semibold text-blue-600 hover:text-blue-800"
                 >
-                  Visualizza Menu
+                  {menu.nome_archivio_nome}
                 </Link>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
       <Footer />

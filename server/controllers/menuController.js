@@ -134,6 +134,43 @@ const menuController = {
     }
   },
 
+  getMenuName: async (req, res) => {
+    try {
+      const { id_archivied } = req.body;
+
+      const query = "SELECT * FROM archivio_nome WHERE id_archivio_nome = ?";
+      const [rows] = await pool.query(query, [id_archivied]);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching menu name:", error);
+      res.status(500).json({
+        message: "Error fetching menu name",
+        error: error.message,
+      });
+    }
+  },
+
+  getArchiviedElement: async (req, res) => {
+    try {
+      const { id_archivied } = req.body;
+
+      const query =
+        "SELECT am.*, r.nome_ricetta FROM archivio_menu am, ricetta r WHERE am.id_ricetta = r.id_ricetta AND id_archivio_nome = ?";
+      const [rows] = await pool.query(query, [id_archivied]);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching menu name:", error);
+      res.status(500).json({
+        message: "Error fetching menu name",
+        error: error.message,
+      });
+    }
+  },
+
   //Insert
   insertMenu: async (req, res) => {
     try {
@@ -202,6 +239,40 @@ const menuController = {
       console.error("Error saving menu:", error);
       res.status(500).json({
         message: "Error saving menu",
+        error: error.message,
+      });
+    }
+  },
+
+  uploadMenuArchivied: async (req, res) => {
+    try {
+      const { id_archivied } = req.body;
+      
+      const query =
+        "SELECT am.*, r.nome_ricetta FROM archivio_menu am, ricetta r WHERE am.id_ricetta = r.id_ricetta AND id_archivio_nome = ?";
+      const [archiviedElements] = await pool.query(query, [id_archivied]);
+
+      // Inserire gli elementi archiviati nel menu corrente
+      const insertQuery = 
+        "INSERT INTO menu(nome_ricetta_personalizzata, id_giorno_settimana, id_ricetta, id_persona, id_momento_giornata) VALUES(?, ?, ?, ?, ?)";
+      
+      for (const element of archiviedElements) {
+        await pool.query(insertQuery, [
+          element.ricetta_personalizzata_archivio_menu,
+          element.id_giorno_settimana,
+          element.id_ricetta,
+          element.id_persona,
+          element.id_momento_giornata
+        ]);
+      }
+
+      res.status(200).json({
+        message: "Menu archived uploaded successfully"
+      });
+    } catch (error) {
+      console.error("Error uploading archived menu:", error);
+      res.status(500).json({
+        message: "Error uploading archived menu",
         error: error.message,
       });
     }
@@ -287,6 +358,27 @@ const menuController = {
       console.error("Error deleteing menu element:", error);
       res.status(500).json({
         message: "Error deleteing menu element",
+        error: error.message,
+      });
+    }
+  },
+
+  clearMenuArchivied: async (req, res) => {
+    try {
+      const { id_archivied } = req.body;
+
+      const query = "DELETE FROM archivio_menu WHERE id_archivio_nome = ?";
+      await pool.query(query, [id_archivied]);
+
+      const query2 = "DELETE FROM archivio_nome WHERE id_archivio_nome = ?";
+      const [rows2] = await pool.query(query2, [id_archivied]);
+
+      // Send all rows as response
+      res.status(200).json(rows2);
+    } catch (error) {
+      console.error("Error deleteing menu archivied:", error);
+      res.status(500).json({
+        message: "Error deleteing menu archivied",
         error: error.message,
       });
     }
