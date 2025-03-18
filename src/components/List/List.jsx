@@ -52,7 +52,7 @@ function List(props) {
       ));
     } else {
       return Object.entries(listChoosen).map(([key, field]) => {
-        if (user.permesso_utente >= field.permission) {
+        if (user.permesso_utente >= field.permission || user.email_utente == field.permission_email) {
           return (
             <Element
               key={key}

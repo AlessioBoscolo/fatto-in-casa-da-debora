@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const menuController = require('../controllers/menuController');
+const menuController = require('../../controllers/incucinacondebora/menuController');
 
 // Routes
 router.get('/getWeekDay', menuController.getWeekDay);

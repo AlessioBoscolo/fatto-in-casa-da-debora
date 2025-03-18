@@ -4,15 +4,17 @@ const fs = require("fs");
 const cors = require("cors");
 const { apiUrl, isDevelopment } = require("./config/apiConfig");
 
-const userRoutes = require("./routes/userRoutes");
-const homeRoutes = require("./routes/homeRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
-const recipeRoutes = require("./routes/recipeRoutes");
-const menuRoutes = require("./routes/menuRoutes");
+const userRoutes = require("./routes/incucinacondebora/userRoutes");
+const homeRoutes = require("./routes/incucinacondebora/homeRoutes");
+const categoryRoutes = require("./routes/incucinacondebora/categoryRoutes");
+const recipeRoutes = require("./routes/incucinacondebora/recipeRoutes");
+const menuRoutes = require("./routes/incucinacondebora/menuRoutes");
+const testRoutes = require("./routes/gallanzscheduler/eventsRoutes");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 
 // Routes
 app.use("/api/user", userRoutes);
@@ -20,6 +22,7 @@ app.use("/api/home", homeRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/recipe", recipeRoutes);
 app.use("/api/menu", menuRoutes);
+app.use("/api/gallanzscheduler", testRoutes);
 
 const PORT = process.env.PORT || 3001;
 if (!isDevelopment()) {

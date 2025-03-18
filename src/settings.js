@@ -4,6 +4,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 import App from "./App";
 import Home from "./pages/Home";
+
+// Incucinacondebora
+
 import CategoryPage from "./pages/CategoryPage";
 import RecipeDetails from "./pages/RecipesDetails";
 import InsertRecipe from "./pages/InsertRecipe";
@@ -14,6 +17,10 @@ import Archivio from "./pages/Menu/Archivio";
 import Archivio_Menu from "./pages/Menu/Archivio_Menu";
 import ModifyMenuDay from "./pages/Menu/ModifyMenuDay";
 
+// GallanzScheduler
+
+import Home_Scheduler from "./pages/Scheduler/Home_Scheduler.jsx";
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +30,9 @@ const routes = createBrowserRouter([
     path: "/newAccess",
     element: <App></App>,
   },
+
+  // Incucinacondebora
+
   {
     path: "/home",
     element: (
@@ -107,6 +117,18 @@ const routes = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+
+  // GallanzScheduler
+
+  {
+    path: "GallanzScheduler",
+    element: (
+      <ProtectedRoute>
+        <Home_Scheduler />
+      </ProtectedRoute>
+    ),
+  },
+
 ]);
 
 export default routes;
