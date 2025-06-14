@@ -179,6 +179,32 @@ const recipeController = {
     }
   },
 
+  deleteRecipe: async (req, res) => {
+    
+    try{
+      const { id_ricetta } = req.body;
+
+
+      let deleteQuery =
+      "DELETE FROM ingrediente_ricetta WHERE id_ricetta = ?";
+      await pool.query(deleteQuery, [id_ricetta]);
+  
+      deleteQuery = "DELETE FROM ricetta WHERE id_ricetta = ?";
+      await pool.query(deleteQuery, [id_ricetta]);
+      res.status(200).json({
+        message: "Recipe deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+      res.status(500).json({
+        message: "Error deleting recipe",
+        error: error.message,
+      });
+    }
+
+
+  },
+
   search: async (req, res) => {
     try {
       const { searchedTerm } = req.body;

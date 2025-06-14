@@ -204,6 +204,32 @@ function UpdateRecipe() {
     }
   };
 
+  const deleteRecipe = async () => {
+    try {
+      const response = await fetch(
+        `${apiUrl}:3001/api/recipe/deleteRecipe`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_ricetta: id_recipe,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        showToast("success", "Ricetta eliminata con successo!");
+        navigate(`/home`);
+      }
+    } catch (error) {
+      showToast("error", "Errore nell'eliminazione della ricetta");
+      console.error("Error:", error);
+    }
+  };
+
+
   return (
     <>
       <Navbar />
@@ -279,6 +305,14 @@ function UpdateRecipe() {
         >
           Salva modifiche
         </button>
+
+        <button
+          className="btn bg-red-500 hover:bg-red-700 w-full md:w-auto mb-8"
+          onClick={deleteRecipe}
+        >
+          Elimina ricetta
+        </button>
+
       </div>
       <Footer />
     </>
