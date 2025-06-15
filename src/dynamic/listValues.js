@@ -26,7 +26,7 @@ const typeList = {
       path: '/gallanzScheduler',
       click: null,
       permission: 999,
-      permission_email: 'elisagalante06@gmail.com',
+      permission_email: ['elisagalante06@gmail.com', 'boscolo.alessio1@gmail.com'],
     },
     choose_4: {
       name: "Logout",

@@ -52,7 +52,16 @@ function List(props) {
       ));
     } else {
       return Object.entries(listChoosen).map(([key, field]) => {
-        if (user.permesso_utente >= field.permission || user.email_utente == field.permission_email) {
+        let found = false;      
+        if (Array.isArray(field.permission_email)) {
+          field.permission_email.forEach(email => {
+            if(email == user.email_utente){
+              found = true;
+            }
+          });
+        }
+            
+        if (user.permesso_utente >= field.permission || found) {
           return (
             <Element
               key={key}
