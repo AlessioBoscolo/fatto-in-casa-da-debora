@@ -1,5 +1,5 @@
 const getApiUrl = () => {
-  const environment = "development";
+  const environment = "no";
 
   if (environment === "development") {
     return "http://localhost";

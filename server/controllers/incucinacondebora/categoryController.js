@@ -8,7 +8,7 @@ const categoryController = {
       const query =
         id_categoria == 14
           ? "SELECT * FROM ricetta WHERE nome_ricetta <> '' ORDER BY id_ricetta DESC"
-          : "SELECT * FROM ricetta WHERE id_categoria = ? AND nome_ricetta <> ''";
+          : "SELECT * FROM ricetta WHERE id_categoria = ? AND nome_ricetta <> '' ORDER BY id_ricetta DESC";
       const [rows] = await pool.query(query, [id_categoria]);
 
       // Send all rows as response

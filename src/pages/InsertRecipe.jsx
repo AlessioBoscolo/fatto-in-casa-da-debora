@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar/Navbar";
+import ImageUploader from "../components/Form/ImageUploader";
 import Footer from "../components/Footer";
 import { showToast } from "../components/Toast/Toast";
 
@@ -27,6 +28,60 @@ function InsertRecipe() {
   // New ingredients
   const [newIngredientCount, setNewIngredientCount] = useState(1);
   const [newIngredients, setNewIngredients] = useState([{ name: "" }]);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+
+
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    console.log("no file");
+    if (!file) return;
+    console.log("si file");
+    
+    const formData = new FormData();
+    formData.append("immagine", file);
+
+    try {
+      const res = await fetch("https://www.incucinacondebora.it/uploads/upload.php", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        const recipePath = "/uploads/" + data.filePath;
+        const updatedRecipe = {
+          ...recipe,
+          image: recipePath
+        };
+        
+        setRecipe(updatedRecipe);
+        console.log("Updated recipe path:", recipePath);
+        
+        showToast("success", data.message);
+        // After successful image upload, submit the recipe with the updated path
+        await handleSubmit(e, updatedRecipe);
+      } else {
+        showToast("error", data.message);
+      }
+    } catch (error) {
+      showToast("error", "Errore durante l'upload");
+    }
+  };
+
+  const handleChangeImage = (e) => {
+    const selected = e.target.files[0];
+    if (selected && selected.type.startsWith("image/")) {
+      setFile(selected);
+      setPreview(URL.createObjectURL(selected));
+    } else {
+      setFile(null);
+      setPreview(null);
+      alert("Per favore seleziona un file immagine.");
+    }
+  };
+
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -94,16 +149,16 @@ function InsertRecipe() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, updatedRecipe = null) => {
     try {
+      const recipeToSubmit = updatedRecipe || recipe;
       const response = await fetch(`${apiUrl}:3001/api/recipe/insertRecipe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          recipeDetails: recipe,
+          recipeDetails: recipeToSubmit,
           ingredientDetails: ingredients,
         }),
       });
@@ -154,7 +209,7 @@ function InsertRecipe() {
         <p className="text-5xl mb-16 text-red-500">
           Inserisci una nuova ricetta
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleUpload}>
           <div className="mb-3">
             <label className="form-label">Nome della ricetta</label>
             <input
@@ -167,16 +222,14 @@ function InsertRecipe() {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Immagine (URL)</label>
-            <input
-              type="text"
-              className="form-control"
-              name="image"
-              value={recipe.image}
-              onChange={handleChange}
-              required
-            />
+          <div>
+            <input type="file" accept="image/*" onChange={handleChangeImage} />
+            {preview && (
+              <div>
+                <p>Anteprima:</p>
+                <img src={preview} alt="Anteprima" style={{ width: 200 }} />
+              </div>
+            )}
           </div>
 
           <div className="mb-3">

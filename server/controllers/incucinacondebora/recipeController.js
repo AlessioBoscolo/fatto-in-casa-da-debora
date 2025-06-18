@@ -58,6 +58,8 @@ const recipeController = {
   insertRecipe: async (req, res) => {
     try {
       const { recipeDetails, ingredientDetails } = req.body;
+      console.log(recipeDetails.image);
+      
       const query =
         "INSERT INTO ricetta(nome_ricetta, porzioni_ricetta, preparazione_ricetta, note_ricetta, image_path_ricetta, id_categoria) VALUES(?, ?, ?, ?, ?, ?)";
       const [rows] = await pool.query(query, [
