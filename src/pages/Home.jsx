@@ -8,7 +8,7 @@ import Cards from "../components/Cards/Cards";
 import Footer from "../components/Footer";
 
 function Home() {
-  return <><Navbar/><Search/><Carousel nrRandomRecipe="5" /><Categories/><Cards title="randomRecipe" nrRandomRecipe="3"/><Footer/></>;
+  return <><Navbar/><Search research="all"/><Carousel nrRandomRecipe="5" /><Categories/><Cards title="randomRecipe" nrRandomRecipe="3"/><Footer/></>;
 }
 
 export default Home;

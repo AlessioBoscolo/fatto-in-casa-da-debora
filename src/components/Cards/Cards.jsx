@@ -7,8 +7,11 @@ const { apiUrl } = require("../../config/apiConfig");
 function Cards(props) {
   const id_categoria = props.id_categoria;
   const [functChoose, setFunctChoose] = React.useState([]);
+  const elementToSearch = props.elementToSearch;
+  const categoryIntoResearch = props.categoryIntoResearch;
 
   React.useEffect(() => {
+    
     switch (props.title) {
       case "categoryPage":
         fetchRecipe();
@@ -17,7 +20,12 @@ function Cards(props) {
         fetchRandomRecipe();
         break;
       case "search":
-        fetchSearchRecipes();
+        
+        if(props.typeResearch == "all"){          
+          fetchSearchRecipes();
+        }else if(props.typeResearch == "category"){
+          fetchSearchRecipesCategory();
+        }
       default:
         break;
     }
@@ -68,7 +76,6 @@ function Cards(props) {
     }
   };
 
-  const elementToSearch = props.elementToSearch;
   const fetchSearchRecipes = async () => {
     try {
       const response = await fetch(`${apiUrl}:3001/api/recipe/search`, {
@@ -87,6 +94,26 @@ function Cards(props) {
       console.error("Error searching recipes:", error);
     }
   };
+
+  const fetchSearchRecipesCategory = async () => {
+    try {
+      const response = await fetch(`${apiUrl}:3001/api/recipe/searchCategory`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ searchedTerm: elementToSearch, category: categoryIntoResearch }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFunctChoose(data.recipes);
+      }
+    } catch (error) {
+      console.error("Error searching recipes:", error);
+    }
+  };
+
 
   function writeCards() {
     return Object.entries(functChoose).map(([key, field]) => (

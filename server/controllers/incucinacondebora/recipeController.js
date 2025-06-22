@@ -231,6 +231,32 @@ const recipeController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+
+  searchCategory: async (req, res) => {
+    try {
+      const { searchedTerm, category } = req.body;
+
+      const [rows] = await pool.query(
+        "SELECT * FROM ricetta WHERE ricetta.id_categoria = ? AND LOWER(nome_ricetta) LIKE LOWER(?)",
+        [category, `%${searchedTerm}%`]
+      );
+
+      const [rows2] = await pool.query(
+        "SELECT * FROM ricetta r, ingrediente_ricetta ir, ingrediente i WHERE r.id_categoria = ? AND LOWER(i.nome_ingrediente) LIKE LOWER(?) AND i.id_ingrediente = ir.id_ingrediente AND ir.id_ricetta = r.id_ricetta",
+        [category, `%${searchedTerm}%`]
+      );
+      const combinedResults = [...rows, ...rows2];
+      const uniqueResults = Array.from(
+        new Map(combinedResults.map((item) => [item.id_ricetta, item])).values()
+      );
+
+      res.status(200).json({ recipes: uniqueResults });
+    } catch (error) {
+      console.error("Error searching recipes:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
 };
 
 module.exports = recipeController;

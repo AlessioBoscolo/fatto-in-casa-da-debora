@@ -1,18 +1,18 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Icon from "./Icon";
 
-function Search() {
+function Search(props) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const navigate = useNavigate();
+  const { id_categoria } = useParams();
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/ricerca/${encodeURIComponent(searchTerm.trim())}`);
+    if (searchTerm.trim()) {      
+      navigate(`/ricerca/${encodeURIComponent(searchTerm.trim())}`, {state: { research: props.research, categoryIntoSearch: id_categoria}});
     }
-    
   };
 
   return (

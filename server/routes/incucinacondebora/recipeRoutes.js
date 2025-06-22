@@ -11,6 +11,7 @@ router.post('/insertIngredient', recipeController.insertIngredient);
 router.post('/saveUpdateRecipe', recipeController.saveUpdateRecipe);
 router.post('/deleteRecipe', recipeController.deleteRecipe);
 router.post('/search', recipeController.search);
+router.post('/searchCategory', recipeController.searchCategory);
 
 
 

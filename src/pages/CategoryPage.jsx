@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import Navbar from "../components/Navbar/Navbar";
+import Search from "../components/Search";
 import Cards from "../components/Cards/Cards";
 
 const { apiUrl } = require('../config/apiConfig');
@@ -42,6 +43,7 @@ function CategoryPage() {
   return (
     <>
       <Navbar />
+      {id_categoria != 14 && <Search research="category"/>}
       <h1 className="mt-4 font-semibold text-center text-3xl text-red-500">
         {categoryName.length > 0
           ? categoryName[0].nome_categoria
