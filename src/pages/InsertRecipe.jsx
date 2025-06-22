@@ -27,7 +27,10 @@ function InsertRecipe() {
 
   // New ingredients
   const [newIngredientCount, setNewIngredientCount] = useState(1);
+  const [newUoMCount, setNewUoMCount] = useState(1);
+  
   const [newIngredients, setNewIngredients] = useState([{ name: "" }]);
+  const [newUoM, setNewUoM] = useState([{ name: "" }]);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
 
@@ -141,6 +144,15 @@ function InsertRecipe() {
     setNewIngredients(updatedIngredients);
   };
 
+  const handleNewUoMChange = (index, field, value) => {
+    const updatedUoM = [...newUoM];
+    updatedUoM[index] = {
+      ...updatedUoM[index],
+      [field]: value,
+    };
+    setNewUoM(updatedUoM);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe((prevState) => ({
@@ -199,6 +211,37 @@ function InsertRecipe() {
       }
     } catch (error) {
       showToast("error", "Errore nell'inserimento degli ingredienti");
+    }
+  };
+
+  const handleUoMSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(
+        `${apiUrl}:3001/api/recipe/insertUoM`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newUoMs: newUoM,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        showToast("success", "Nuove unità di misura inserite con successo!");
+        // Aggiorna la lista degli ingredienti
+        const updatedIngredientsResponse = await fetch(
+          `${apiUrl}:3001/api/recipe/getUoM`
+        );
+        const updatedData = await updatedIngredientsResponse.json();
+        setUoM(updatedData);
+      }
+    } catch (error) {
+      showToast("error", "Errore nell'inserimento delle unità di misura");
     }
   };
 
@@ -407,6 +450,55 @@ function InsertRecipe() {
           </button>
         </form>
       </div>
+
+      <div className="container mt-16">
+        <p className="text-5xl mb-16 text-red-500">
+          Inserisci unità di misura mancanti
+        </p>
+        <form>
+          <div className="mb-3">
+            <label className="form-label">
+              Numero di unità di misura da inserire
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              name="newUoMCount"
+              min="1"
+              defaultValue="1"
+              onChange={(e) =>
+                setNewUoMCount(parseInt(e.target.value) || 1)
+              }
+            />
+          </div>
+
+          {[...Array(newUoMCount)].map((_, index) => (
+            <div key={index} className="mb-3">
+              <label className="form-label">Nome unità di misura {index + 1}</label>
+              <input
+                type="text"
+                className="form-control"
+                name={`newUoM${index}`}
+                placeholder={`Inserisci il nome della nuova unità di misura ${
+                  index + 1
+                }`}
+                onChange={(e) =>
+                  handleNewUoMChange(index, "name", e.target.value)
+                }
+              />
+            </div>
+          ))}
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={handleUoMSubmit}
+          >
+            Aggiungi unità di misura
+          </button>
+        </form>
+      </div>
+
       <Footer />
     </>
   );

@@ -8,6 +8,7 @@ router.get('/getIngredients', recipeController.getIngredients);
 router.get('/getUoM', recipeController.getUoM);
 router.post('/insertRecipe', recipeController.insertRecipe);
 router.post('/insertIngredient', recipeController.insertIngredient);
+router.post('/insertUoM', recipeController.insertUoM);
 router.post('/saveUpdateRecipe', recipeController.saveUpdateRecipe);
 router.post('/deleteRecipe', recipeController.deleteRecipe);
 router.post('/search', recipeController.search);

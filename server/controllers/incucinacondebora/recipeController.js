@@ -124,6 +124,31 @@ const recipeController = {
     }
   },
 
+  insertUoM: async (req, res) => {
+    try {
+      const { newUoMs } = req.body;
+
+      // Insert ingredients for the recipe
+      const query = "INSERT INTO unita_misura(nome_unita_misura) VALUES(?)";
+
+      // Insert each ingredient
+      for (const UoM of newUoMs) {
+        await pool.query(query, [UoM.name]);
+      }
+
+      res.status(200).json({
+        message: "New UoM inserted successfully",
+      });
+    } catch (error) {
+      console.error("Error inserting UoM:", error);
+      res.status(500).json({
+        message: "Error inserting UoM",
+        error: error.message,
+      });
+    }
+  },
+
+
   saveUpdateRecipe: async (req, res) => {
     try {
       const {
