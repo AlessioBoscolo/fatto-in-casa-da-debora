@@ -10,7 +10,7 @@ const { apiUrl } = require('../../config/apiConfig');
 function Home_Scheduler() {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-    const [events, setEvents] = useState({});
+    //const [events, setEvents] = useState({});
     const [dbEvents, setDbEvents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -39,7 +39,7 @@ function Home_Scheduler() {
                 setDbEvents(eventsArray);
                 
                 // Forza il re-render anche se non ci sono eventi
-                setEvents({}); // Reset degli eventi formattati
+                //setEvents({}); // Reset degli eventi formattati
                 
                 // Crea i nuovi eventi formattati
                 if (eventsArray.length > 0) {
@@ -57,7 +57,7 @@ function Home_Scheduler() {
                         formattedEvents[eventKey].push(event.descrizione_evento_calendario);
                     });
                     
-                    setEvents(formattedEvents);
+                   // setEvents(formattedEvents);
                 }
             } else {
                 console.error("Errore nella risposta del server");
@@ -79,13 +79,9 @@ function Home_Scheduler() {
         loadEventsFromDB();
     }, []);
 
-    const capitalizeFirstLetter = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    };
-
     // Formatta la data in formato IT
     const formatDate = (date) => {
-        return date.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric' })
+        return date.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric' })
             .replace(/^\w/, (c) => c.toUpperCase());
     };
 
@@ -185,7 +181,7 @@ function Home_Scheduler() {
                         @media print {
                             body { 
                                 margin: 0; 
-                                padding: 20px; 
+                                padding: 0px; 
                             }
                             table {
                                 page-break-inside: avoid;
@@ -201,7 +197,7 @@ function Home_Scheduler() {
                         
                         /* Replica degli stili principali */
                         .morning-events, .afternoon-events {
-                            margin: 4px 0;
+                            margin: 1px 0;
                         }
                         table {
                             width: 100%;
@@ -219,7 +215,6 @@ function Home_Scheduler() {
                 </head>
                 <body class="bg-white">
                     <div class="container mx-auto p-4">
-                        <h2 class="text-2xl font-bold mb-4">Calendario ${monthName}</h2>
                         <div class="overflow-x-auto">
                             ${tableContent}
                         </div>
@@ -254,7 +249,7 @@ function Home_Scheduler() {
 
         const renderMonthHeader = (date) => (
             <tr key={`month-${date.getTime()}`}>
-                <td colSpan="7" className="text-center py-8">
+                <td colSpan="7" className="text-center  ">
                     <div className="flex justify-between items-center p-4 bg-gray-50">
                         <h2 className="text-2xl font-bold">{date.toLocaleString('it-IT', { month: 'long', year: 'numeric' })
                             .replace(/^\w/, (c) => c.toUpperCase())}</h2>

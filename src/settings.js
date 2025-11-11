@@ -14,12 +14,13 @@ import UpdateRecipe from "./pages/UpdateRecipe";
 import SearchResults from "./pages/SearchResults";
 import Menu from "./pages/Menu/Menu";
 import Archivio from "./pages/Menu/Archivio";
-import Archivio_Menu from "./pages/Menu/Archivio_Menu";
+import ArchivioMenu from "./pages/Menu/ArchivioMenu";
 import ModifyMenuDay from "./pages/Menu/ModifyMenuDay";
 
 // GallanzScheduler
 
 import Home_Scheduler from "./pages/Scheduler/Home_Scheduler.jsx";
+import DashboardPage from "./pages/Dashboard/DashboardPage.jsx";
 
 const routes = createBrowserRouter([
   {
@@ -38,6 +39,14 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Home />
+      </ProtectedRoute>
+    ),
+  },  
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <DashboardPage />
       </ProtectedRoute>
     ),
   },
@@ -104,7 +113,7 @@ const routes = createBrowserRouter([
     path: "menu/archivio/:id_archivio", // :id è un parametro dinamico
     element: (
       <ProtectedRoute>
-        <Archivio_Menu />
+        <ArchivioMenu />
       </ProtectedRoute>
     ),
   },

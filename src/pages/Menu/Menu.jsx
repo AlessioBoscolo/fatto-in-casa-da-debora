@@ -4,6 +4,8 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer";
 import { showToast } from "../../components/Toast/Toast";
 import Swal from "sweetalert2";
+import { useAuth } from "../../context/AuthContext";
+
 
 const { apiUrl } = require("../../config/apiConfig");
 
@@ -136,6 +138,8 @@ function Menu() {
     fetchMenuItems();
     fetchDayConfiguration();
   }, []);
+
+  const { user } = useAuth();
 
   const clearMenu = async () => {
     try {
@@ -369,8 +373,14 @@ function Menu() {
           <td
             key={`giorno${dayIndex}${momentKey}`}
             id={`giorno${dayIndex}${momentKey}`}
-            onClick={() => insertDayRecipe(dayIndex, field.id_momento_giornata)}
-            className="whitespace-nowrap border-e border-neutral-200 px-6 py-4 font-medium"
+            onClick={
+              user.permesso_utente > 1
+                ? () => insertDayRecipe(dayIndex, field.id_momento_giornata)
+                : undefined
+            }
+            className={`whitespace-nowrap border-e border-neutral-200 px-6 py-4 font-medium ${
+              user.permesso_utente > 1 ? "cursor-pointer hover:bg-neutral-50" : "cursor-not-allowed"
+            }`}
           >
             {cellMenuItems.length > 0 ? (
               <div className="space-y-2">
@@ -567,38 +577,40 @@ function Menu() {
           <tbody>{writeContent()}</tbody>
         </table>
       </div>
-      <div className="grid grid-cols-2 mt-11">
-        <div className="text-center">
-          <button 
-            onClick={handleSaveMenu} 
-            className="btn bg-green-400 hover:bg-green-500 mt-4"
-          >
-            Salva menù
-          </button>
-          <br />
-          <button 
-            onClick={handleConfigurationMenu} 
-            className="btn bg-blue-400 hover:bg-blue-500 mt-4"
-          >
-            Configurazione menù
-          </button>
-        </div>
-        <div className="text-center">
-          <button
-            onClick={() => openConfirmDelete()}
-            className="btn bg-red-400 hover:bg-red-500 mt-4"
-          >
-            Svuota menù
-          </button>
-          <br />
-          <Link to="/menu/archivio">
-            <button className="btn bg-yellow-400 hover:bg-yellow-500 mt-4">
-              Archivio menù
+      {user.permesso_utente > 1 && (
+        <div className="grid grid-cols-2 mt-11">
+          <div className="text-center">
+            <button 
+              onClick={handleSaveMenu} 
+              className="btn bg-green-400 hover:bg-green-500 mt-4"
+            >
+              Salva menù
             </button>
-          </Link>
+            <br />
+            <button 
+              onClick={handleConfigurationMenu} 
+              className="btn bg-blue-400 hover:bg-blue-500 mt-4"
+            >
+              Configurazione menù
+            </button>
+          </div>
+          <div className="text-center">
+            <button
+              onClick={() => openConfirmDelete()}
+              className="btn bg-red-400 hover:bg-red-500 mt-4"
+            >
+              Svuota menù
+            </button>
+            <br />
+            <Link to="/menu/archivio">
+              <button className="btn bg-yellow-400 hover:bg-yellow-500 mt-4">
+                Archivio menù
+              </button>
+            </Link>
+          </div>
         </div>
-      </div>
-
+      )}
+  
       <Footer />
     </>
   );

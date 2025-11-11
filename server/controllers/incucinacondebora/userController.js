@@ -97,6 +97,103 @@ const userController = {
       res.status(500).json({ error: "Server error" });
     }
   },
+  usersNotAccepted: async (req, res) => {
+    try {
+      const query = "SELECT * FROM utente WHERE permesso_utente = 0";
+      const [rows] = await pool.query(query);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({
+        message: "Error fetching users",
+        error: error.message,
+      });
+    }
+
+  },
+  getUserPermissions: async (req, res) => {
+    try {
+      const query = "SELECT * FROM permesso WHERE id_permesso <> 0";
+      const [rows] = await pool.query(query);
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching permission category:", error);
+      res.status(500).json({
+        message: "Error fetching permission category",
+        error: error.message,
+      });
+    }
+
+  },
+  getUserAuthorized: async (req, res) => {
+    try {
+      const query = "SELECT * FROM utente u, permesso p WHERE u.permesso_utente = p.id_permesso AND u.permesso_utente <> 0 ORDER BY u.permesso_utente DESC";
+      const [rows] = await pool.query(query);
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({
+        message: "Error fetching users",
+        error: error.message,
+      });
+    }
+
+  },
+  setUserPermission: async (req, res) => {
+    try {
+      const { id_user, id_permission } = req.body;      
+
+      const query =
+        "UPDATE utente SET permesso_utente = ? WHERE id_utente = ?";
+      const [rows] = await pool.query(query, [
+        id_permission,
+        id_user,
+      ]);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error updating user permission:", error);
+      res.status(500).json({
+        message: "Error updating user permission",
+        error: error.message,
+      });
+    }
+  },
+
+  deleteUserRequest: async (req, res) => {
+    try {
+      const { id_user } = req.body;      
+
+      const query =
+        "DELETE FROM utente WHERE id_utente = ?";
+      const [rows] = await pool.query(query, [
+        id_user,
+      ]);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      res.status(500).json({
+        message: "Error deleting user",
+        error: error.message,
+      });
+    }
+  },
+
+
+
+  
+
+  
+
+
+  
 
 };
 

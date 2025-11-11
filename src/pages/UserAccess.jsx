@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "../components/Image";
 import Form from "../components/Form/Form";
-import backgroundImage from "../images/backgroundImage.png";
 
 function UserAccess() {
   const isRegistered = window.location.pathname === "/newAccess" ? false : true;
