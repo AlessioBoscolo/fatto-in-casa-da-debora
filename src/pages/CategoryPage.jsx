@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Search from "../components/Search";
 import Cards from "../components/Cards/Cards";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 const { apiUrl } = require('../config/apiConfig');
 
@@ -50,6 +51,7 @@ function CategoryPage() {
           : "Caricamento..."}{" "}
       </h1>
       <Cards title="categoryPage" id_categoria={id_categoria} />
+      <ScrollToTopButton />
     </>
   );
 }
