@@ -21,12 +21,21 @@ function Menu() {
   const [people, setPeople] = React.useState([]);
   const [dayConfiguration, setDayConfiguration] = React.useState([]);
   const [menuItems, setMenuItems] = useState([]);
+  const [ingredientsList, setIngredientsList] = useState([]);
+  const [ingredientCount, setIngredientCount] = useState(1);
+  const [UoM, setUoM] = useState([]);
+
+  const [ingredients, setIngredients] = useState([
+    { name: "", quantity: "", unit: "" },
+  ]);
 
   const [dayClicked, setDayClicked] = useState([]);
   const [nomePersonalizzato, setNomePersonalizzato] = useState('');
   const [idRicetta, setIdRicetta] = useState('');
   const [idPersona, setIdPersona] = useState('');
   const [error, setError] = useState(false);
+  
+  const [nrPorzioni, setNrPorzioni] = useState(); 
 
   const [colors, setColors] = useState([]);
 
@@ -61,6 +70,9 @@ function Menu() {
           maxOptions: maxOptions,
           create: create,
           placeholder: placeholder,
+          plugins: [
+            'remove_button',       // X su ogni item (multi-select)
+          ],
           onChange: (value) => {
             if (onChange) {
               onChange(value);
@@ -241,6 +253,29 @@ function Menu() {
 
     };
 
+    const fetchIngredients = async () => {
+      try {
+        // Sostituisci con il tuo endpoint API
+        const response = await fetch(
+          `${apiUrl}:3001/api/recipe/getIngredients`
+        );
+        const data = await response.json();
+        setIngredientsList(data);
+      } catch (error) {
+        console.error("Errore nel caricamento degli ingredienti:", error);
+      }
+    };
+
+    const fetchUoM = async () => {
+      try {
+        const response = await fetch(`${apiUrl}:3001/api/recipe/getUoM`);
+        const data = await response.json();
+        setUoM(data);
+      } catch (error) {
+        console.error("Errore nel caricamento degli ingredienti:", error);
+      }
+    };
+
     fetchWeekDay();
     fetchDayMoment();
     fetchAllRecipe();
@@ -248,9 +283,22 @@ function Menu() {
     fetchMenuItems();
     fetchDayConfiguration();
     fetchColors();
+    fetchIngredients();
+    fetchUoM();
+
   }, []);
 
   const { user } = useAuth();
+
+
+  const handleIngredientChange = (index, field, value) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index] = {
+      ...newIngredients[index],
+      [field]: value,
+    };
+    setIngredients(newIngredients);
+  };
 
 
   const personColors = Object.fromEntries(
@@ -275,6 +323,18 @@ function Menu() {
       return false;
     }
   };
+
+  function resetFields(){
+    setIdRicetta('');
+    setIdPersona('');
+    setNomePersonalizzato('');
+    setError(false);
+    setIngredientCount(1);
+
+    setIngredients([{ name: "", quantity: "", unit: "" }]);
+  
+  
+  }
 
   async function openConfirmDelete() {
     Swal.fire({
@@ -606,6 +666,8 @@ function Menu() {
     });
   };
 
+  
+
   return (
     <>
       <Navbar />
@@ -659,7 +721,7 @@ function Menu() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title="Inserisci ricetta"
-          size="md"
+          size="xl"
         >
           <div className="space-y-4">
             <div className="text-left">
@@ -669,12 +731,81 @@ function Menu() {
               <input 
                 type="text" 
                 value={nomePersonalizzato}
-                onChange={(e) => {setNomePersonalizzato(e.target.value); console.log(nomePersonalizzato)}
+                onChange={(e) => {setNomePersonalizzato(e.target.value)}
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Inserisci un nome personalizzato"
               />
             </div>
+
+            <div className="text-left">
+              <label className="form-label">Numero di porzioni</label>
+              <input
+                type="number"
+                className="form-control"
+                name="servings"
+                value={recipe.servings}
+                onChange={(e) => setNrPorzioni(e.target.value)}
+                required
+              />
+            </div>
+
+            {nomePersonalizzato !== '' && (
+              <>
+                <div className="mb-3">
+                  <label className="form-label">Numero di ingredienti</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="ingredientCount"
+                    min="1"
+                    defaultValue={ingredientCount}
+                    onChange={(e) =>
+                      setIngredientCount(parseInt(e.target.value) || 1)
+                    }
+                  />
+                </div>
+
+                {[...Array(ingredientCount)].map((_, index) => (
+                  <div key={index} className="mb-16 row">
+                    <div className="col-md-5">
+                      <label className="form-label">Ingrediente {index + 1}</label>
+                      <TomSelectComponent
+                        options={ingredientsList.map((item) => ({ value: item.id_ingrediente, text: item.nome_ingrediente }))}
+                        value={ingredients[index]?.name || ""}
+                        onChange={(e) => handleIngredientChange(index, "name", e)}
+                        placeholder="Cerca un ingrediente..."
+                        maxOptions={null}
+                      />   
+                    </div>
+                    <div className="col-md-3">
+                      <label className="form-label">Quantità</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={ingredients[index]?.quantity || ""}
+                        onChange={(e) =>
+                          handleIngredientChange(index, "quantity", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Unità di misura</label>
+                      <TomSelectComponent
+                        options={UoM.map((item) => ({ value: item.id_unita_misura, text: item.nome_unita_misura }))}
+                        value={ingredients[index]?.unit || ""}
+                        onChange={(e) => handleIngredientChange(index, "unit", e)}
+                        placeholder="Cerca una UoM..."
+                        maxOptions={null}
+                      />   
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          
+          
+
             
             <div className="text-left">
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -686,7 +817,7 @@ function Menu() {
                   value={idRicetta}
                   onChange={(e) => setIdRicetta(e)}
                   placeholder="Cerca una ricetta..."
-                  maxOptions={500}
+                  maxOptions={null}
                 />   
               </div>
             </div>
@@ -701,7 +832,7 @@ function Menu() {
                   value={idPersona}
                   onChange={(e) => setIdPersona(e)}
                   placeholder="Cerca una persona  ..."
-                  maxOptions={500}
+                  maxOptions={null}
                 />              
               </div>
             </div>
@@ -726,10 +857,7 @@ function Menu() {
               <button
                 onClick={() => {
                   setIsModalOpen(false);
-                  setIdRicetta('');
-                  setIdPersona('');
-                  setNomePersonalizzato('');
-                  setError(false);
+                  resetFields();
                   updateMenu();
                 }}
         
@@ -741,10 +869,7 @@ function Menu() {
               <button
                 onClick={() => {
                   setIsModalOpen(false);
-                  setIdRicetta('');
-                  setIdPersona('');
-                  setNomePersonalizzato('');
-                  setError(false);
+                  resetFields();
                 }}
         
       
