@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer";
@@ -6,6 +6,11 @@ import { showToast } from "../../components/Toast/Toast";
 import Swal from "sweetalert2";
 import { useAuth } from "../../context/AuthContext";
 
+
+import Modal from "../../components/Modal";
+
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.css';
 
 const { apiUrl } = require("../../config/apiConfig");
 
@@ -16,6 +21,85 @@ function Menu() {
   const [people, setPeople] = React.useState([]);
   const [dayConfiguration, setDayConfiguration] = React.useState([]);
   const [menuItems, setMenuItems] = useState([]);
+
+  const [dayClicked, setDayClicked] = useState([]);
+  const [nomePersonalizzato, setNomePersonalizzato] = useState('');
+  const [idRicetta, setIdRicetta] = useState('');
+  const [idPersona, setIdPersona] = useState('');
+  const [error, setError] = useState(false);
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalSize, setModalSize] = useState('md');
+
+  const TomSelectComponent = ({ 
+    options = [], 
+    value, 
+    onChange, 
+    placeholder = 'Seleziona...',
+    maxItems = 1,
+    create = false,
+    valueField = 'value',
+    labelField = 'text',
+    searchField = ['text'],
+    maxOptions = null,
+  }) => {
+    const selectRef = useRef(null);
+    const tomSelectRef = useRef(null);
+  
+    useEffect(() => {
+      if (selectRef.current && !tomSelectRef.current) {
+        // Inizializza Tom Select
+        tomSelectRef.current = new TomSelect(selectRef.current, {
+          options: options,
+          valueField: valueField,
+          labelField: labelField,
+          searchField: searchField,
+          maxItems: maxItems,
+          maxOptions: maxOptions,
+          create: create,
+          placeholder: placeholder,
+          onChange: (value) => {
+            if (onChange) {
+              onChange(value);
+            }
+          }
+        });
+  
+        // Imposta il valore iniziale
+        if (value) {
+          tomSelectRef.current.setValue(value, true);
+        }
+      }
+  
+      // Cleanup
+      return () => {
+        if (tomSelectRef.current) {
+          tomSelectRef.current.destroy();
+          tomSelectRef.current = null;
+        }
+      };
+    }, []);
+  
+    // Aggiorna le opzioni quando cambiano
+    useEffect(() => {
+      if (tomSelectRef.current) {
+        tomSelectRef.current.clearOptions();
+        tomSelectRef.current.addOptions(options);
+      }
+    }, [options]);
+  
+    // Aggiorna il valore quando cambia
+    useEffect(() => {
+      if (tomSelectRef.current && value !== tomSelectRef.current.getValue()) {
+        tomSelectRef.current.setValue(value, true);
+      }
+    }, [value]);
+  
+    return (
+      <select ref={selectRef} />
+    );
+  };
 
   React.useEffect(() => {
     const fetchWeekDay = async () => {
@@ -198,136 +282,66 @@ function Menu() {
     });
   }
 
-  function insertDayRecipe(id_giorno, id_momento) {
-    Swal.fire({
-      title: 'Inserisci Ricetta',
-      html: `
-        <div class="space-y-4">
-          <div class="text-left">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nome ricetta personalizzato</label>
-            <input 
-              type="text" 
-              id="nome_personalizzato" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Inserisci un nome personalizzato">
-          </div>
-          
-          <div class="text-left">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Seleziona la ricetta</label>
-            <div class="relative">
-              <select 
-                id="id_ricetta" 
-                class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm mobile-select"
-                required>
-                ${recipe.map(recipeItem => 
-                  `<option value="${recipeItem.id_ricetta}">${recipeItem.nome_ricetta}</option>`
-                ).join('')}
-              </select>
-            </div>
-          </div>
-          
-          <div class="text-left">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Seleziona la persona</label>
-            <div class="relative">
-              <select 
-                id="id_persona" 
-                class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm mobile-select"
-                required>
-                ${people.map(peopleItem => 
-                  `<option value="${peopleItem.id_persona}">${peopleItem.nome_persona}</option>`
-                ).join('')}
-              </select>
-            </div>
-          </div>
-        </div>
-      `,
-      showCancelButton: true,
-      confirmButtonText: 'Aggiungi ricetta',
-      cancelButtonText: 'Annulla',
-      showDenyButton: true,
-      denyButtonText: 'Modifica ricetta',
-      customClass: {
-        container: 'swal2-container p-0',
-        popup: 'swal2-popup rounded-lg w-[95%] mx-auto max-w-lg',
-        header: 'swal2-header p-4',
-        title: 'text-lg sm:text-xl font-semibold text-gray-800 mb-4',
-        htmlContainer: 'swal2-html-container px-4 pb-4',
-        actions: 'swal2-actions gap-2 p-4',
-        confirmButton: 'px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2',
-        denyButton: 'px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2',
-        cancelButton: 'px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
-      },
-      didOpen: () => {
-        // Aggiungi gestione specifica per mobile
-        const mobileSelects = document.querySelectorAll('.mobile-select');
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-          mobileSelects.forEach(select => {
-            select.addEventListener('touchstart', (e) => {
-              e.stopPropagation();
-            });
-            select.addEventListener('click', (e) => {
-              e.stopPropagation();
-            });
-          });
-        }
-      },
-      width: 'auto',
-      padding: 0,
-      position: 'center',
-      allowOutsideClick: true,
-      showClass: {
-        popup: 'animate__animated animate__fadeInDown animate__faster'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp animate__faster'
-      },
-      preConfirm: () => {
-        return {
-          nome_personalizzato: document.getElementById('nome_personalizzato').value,
-          id_ricetta: document.getElementById('id_ricetta').value,
-          id_persona: document.getElementById('id_persona').value,
-        }
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await fetch(`${apiUrl}:3001/api/menu/insertMenu`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...result.value,
-              id_giorno: id_giorno,
-              id_momento: id_momento,
-            }),
-          });
+  async function insertDayRecipe() {
+    if((nomePersonalizzato == '' && idRicetta == '') || idPersona == ''){
+      setError(true);
+      return;
+    }
 
-          if (response.ok) {
-            showToast("success", "Ricetta inserita con successo!");
-            // Ricarica i menu dopo l'inserimento
-            const menuResponse = await fetch(`${apiUrl}:3001/api/menu/getMenu`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-            if (menuResponse.ok) {
-              const retrievedData = await menuResponse.json();
-              setMenuItems(retrievedData);
-            }
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          showToast("error", "Errore nell'inserimento della ricetta");
+    setIsModalOpen(false);
+
+    
+    try {
+      const response = await fetch(`${apiUrl}:3001/api/menu/insertMenu`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome_personalizzato: nomePersonalizzato,
+          id_ricetta: idRicetta,
+          id_persona: idPersona,
+          id_giorno: dayClicked[0],
+          id_momento: dayClicked[1],
+        }),
+      });
+
+      if (response.ok) {
+        showToast("success", "Ricetta inserita con successo!");
+        // Ricarica i menu dopo l'inserimento
+        const menuResponse = await fetch(`${apiUrl}:3001/api/menu/getMenu`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (menuResponse.ok) {
+          const retrievedData = await menuResponse.json();
+          setMenuItems(retrievedData);
         }
-      } else if (result.isDenied) {
-        // Salva i valori nei cookie prima di reindirizzare
-        document.cookie = `recipeSelected=${id_giorno},${id_momento}`;
-        window.location.href = '/menu/modificaMenu';
-      }
-    });
+        setIdRicetta('');
+        setIdPersona('');
+        setNomePersonalizzato('');
+        setError(false);
+
+}
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("error", "Errore nell'inserimento della ricetta");
+      setIdRicetta('');
+      setIdPersona('');
+      setNomePersonalizzato('');
+      setError(false);
+
+
+    }
   }
+
+  function updateMenu(){
+    document.cookie = `recipeSelected=${dayClicked[0]},${dayClicked[1]}`;
+    window.location.href = '/menu/modificaMenu';
+  }
+
 
   function writeHeader() {
     return Object.entries(weekDay).map(([key, field]) => {
@@ -373,11 +387,18 @@ function Menu() {
           <td
             key={`giorno${dayIndex}${momentKey}`}
             id={`giorno${dayIndex}${momentKey}`}
-            onClick={
+            /*onClick={
               user.permesso_utente > 1
                 ? () => insertDayRecipe(dayIndex, field.id_momento_giornata)
                 : undefined
-            }
+            }*/
+
+            onClick={user.permesso_utente > 1
+              ? () => {
+              setModalSize('xl');
+              setIsModalOpen(true);
+              setDayClicked([dayIndex, field.id_momento_giornata]);
+            } : undefined }
             className={`whitespace-nowrap border-e border-neutral-200 px-6 py-4 font-medium ${
               user.permesso_utente > 1 ? "cursor-pointer hover:bg-neutral-50" : "cursor-not-allowed"
             }`}
@@ -610,7 +631,106 @@ function Menu() {
           </div>
         </div>
       )}
-  
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title="Inserisci ricetta"
+          size="md"
+        >
+          <div className="space-y-4">
+            <div className="text-left">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nome ricetta personalizzato
+              </label>
+              <input 
+                type="text" 
+                value={nomePersonalizzato}
+                onChange={(e) => {setNomePersonalizzato(e.target.value); console.log(nomePersonalizzato)}
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Inserisci un nome personalizzato"
+              />
+            </div>
+            
+            <div className="text-left">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Seleziona la ricetta
+              </label>
+              <div className="relative">
+                <TomSelectComponent
+                  options={recipe.map(r => ({ value: r.id_ricetta, text: r.nome_ricetta }))}
+                  value={idRicetta}
+                  onChange={(e) => setIdRicetta(e)}
+                  placeholder="Cerca una ricetta..."
+                  maxOptions={500}
+                />   
+              </div>
+            </div>
+            
+            <div className="text-left">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Seleziona la persona
+              </label>
+              <div className="relative">
+                <TomSelectComponent
+                  options={people.map(r => ({ value: r.id_persona, text: r.nome_persona }))}
+                  value={idPersona}
+                  onChange={(e) => setIdPersona(e)}
+                  placeholder="Cerca una persona  ..."
+                  maxOptions={500}
+                />              
+              </div>
+            </div>
+
+            <div className="text-left">
+              <div className="relative">
+                {error && <span className="text-red-500" >Completa tutti i campi obbligatori</span>}
+              </div>
+            </div>
+
+
+
+            <div className="flex justify-end gap-3 pt-4">
+              <button
+                onClick={() => {
+                  insertDayRecipe();
+                }}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Inserisci
+              </button>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setIdRicetta('');
+                  setIdPersona('');
+                  setNomePersonalizzato('');
+                  setError(false);
+                  updateMenu();
+                }}
+        
+      
+                className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
+                Modifica
+              </button>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setIdRicetta('');
+                  setIdPersona('');
+                  setNomePersonalizzato('');
+                  setError(false);
+                }}
+        
+      
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Annulla
+              </button>
+            </div>
+          </div>
+        </Modal>  
       <Footer />
     </>
   );
