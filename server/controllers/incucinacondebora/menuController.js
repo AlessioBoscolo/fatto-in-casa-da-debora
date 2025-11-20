@@ -170,6 +170,24 @@ const menuController = {
       });
     }
   },
+  
+
+  getColors: async (req, res) => {
+    try {
+      const query =
+        "SELECT id_persona, codice_colore FROM colori";
+      const [rows] = await pool.query(query);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+      res.status(500).json({
+        message: "Error fetching colors",
+        error: error.message,
+      });
+    }
+  },
 
   //Insert
   insertMenu: async (req, res) => {

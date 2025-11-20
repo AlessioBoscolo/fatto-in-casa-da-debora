@@ -11,6 +11,7 @@ router.get('/getMenu', menuController.getMenu);
 router.get('/clearMenu', menuController.clearMenu);
 router.get('/getDayConfiguration', menuController.getDayConfiguration);
 router.get('/getMenuArchiviati', menuController.getMenuArchiviati);
+router.get('/getColors', menuController.getColors);
 
 router.post('/insertMenu', menuController.insertMenu);
 router.post('/getDaysElement', menuController.getDaysElement);

@@ -28,6 +28,8 @@ function Menu() {
   const [idPersona, setIdPersona] = useState('');
   const [error, setError] = useState(false);
 
+  const [colors, setColors] = useState([]);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalSize, setModalSize] = useState('md');
@@ -215,15 +217,45 @@ function Menu() {
       }
     };
 
+    const fetchColors = async () => {
+      try {
+        const response = await fetch(
+          `${apiUrl}:3001/api/menu/getColors`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          const retrievedData = await response.json();
+          setColors(retrievedData);          
+        } else {
+          console.error("Colors Configuration API error:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching colors configuration:", error);
+      }
+
+    };
+
     fetchWeekDay();
     fetchDayMoment();
     fetchAllRecipe();
     fetchPeople();
     fetchMenuItems();
     fetchDayConfiguration();
+    fetchColors();
   }, []);
 
   const { user } = useAuth();
+
+
+  const personColors = Object.fromEntries(
+    colors.map(item => [item.id_persona, item.codice_colore])
+  );
 
   const clearMenu = async () => {
     try {
@@ -365,15 +397,7 @@ function Menu() {
   }
 
   function writeContent() {
-    // Mappa degli id_persona ai colori
-    const personColors = {
-      1: "bg-blue-100",
-      2: "bg-green-100",
-      3: "bg-yellow-100",
-      4: "bg-purple-100",
-      5: "bg-pink-100",
-    };
-
+    console.log(personColors);
     return Object.entries(dayMoment).map(([momentKey, field]) => {
       const cells = Array.from({ length: 7 }, (_, dayIndex) => {
         const cellMenuItems = menuItems.filter((item) => {
