@@ -23,6 +23,7 @@ function Menu() {
   const [menuItems, setMenuItems] = useState([]);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [ingredientCount, setIngredientCount] = useState(1);
+  const [lastMenu, getLastMenu] = useState(1);
   const [UoM, setUoM] = useState([]);
 
   const [ingredients, setIngredients] = useState([
@@ -31,8 +32,8 @@ function Menu() {
 
   const [dayClicked, setDayClicked] = useState([]);
   const [nomePersonalizzato, setNomePersonalizzato] = useState('');
-  const [idRicetta, setIdRicetta] = useState('');
-  const [idPersona, setIdPersona] = useState('');
+  const [idRicetta, setIdRicetta] = useState();
+  const [idPersona, setIdPersona] = useState();
   const [error, setError] = useState(false);
   
   const [nrPorzioni, setNrPorzioni] = useState(); 
@@ -375,11 +376,11 @@ function Menu() {
   }
 
   async function insertDayRecipe() {
-    if((nomePersonalizzato == '' && idRicetta == '') || idPersona == ''){
+    if((nomePersonalizzato == '' && idRicetta == null) || idPersona == '' || nrPorzioni == null){
       setError(true);
       return;
     }
-
+    
     setIsModalOpen(false);
 
     
@@ -391,16 +392,16 @@ function Menu() {
         },
         body: JSON.stringify({
           nome_personalizzato: nomePersonalizzato,
-          id_ricetta: idRicetta,
+          id_ricetta: idRicettaToPass,
           id_persona: idPersona,
           id_giorno: dayClicked[0],
           id_momento: dayClicked[1],
+          ingredientDetails: ingredients,
+          porzioni: nrPorzioni,
         }),
       });
 
       if (response.ok) {
-        showToast("success", "Ricetta inserita con successo!");
-        // Ricarica i menu dopo l'inserimento
         const menuResponse = await fetch(`${apiUrl}:3001/api/menu/getMenu`, {
           method: "GET",
           headers: {
@@ -411,13 +412,16 @@ function Menu() {
           const retrievedData = await menuResponse.json();
           setMenuItems(retrievedData);
         }
-        setIdRicetta('');
-        setIdPersona('');
-        setNomePersonalizzato('');
-        setError(false);
+        showToast("success", "Ricetta inserita con successo!");
+      }
 
-}
-    } catch (error) {
+      // Ricarica i menu dopo l'inserimento
+      setIdRicetta('');
+      setIdPersona('');
+      setNomePersonalizzato('');
+      setError(false);
+
+  }catch (error) {
       console.error("Error:", error);
       showToast("error", "Errore nell'inserimento della ricetta");
       setIdRicetta('');
@@ -433,7 +437,6 @@ function Menu() {
     document.cookie = `recipeSelected=${dayClicked[0]},${dayClicked[1]}`;
     window.location.href = '/menu/modificaMenu';
   }
-
 
   function writeHeader() {
     return Object.entries(weekDay).map(([key, field]) => {
@@ -457,7 +460,6 @@ function Menu() {
   }
 
   function writeContent() {
-    console.log(personColors);
     return Object.entries(dayMoment).map(([momentKey, field]) => {
       const cells = Array.from({ length: 7 }, (_, dayIndex) => {
         const cellMenuItems = menuItems.filter((item) => {

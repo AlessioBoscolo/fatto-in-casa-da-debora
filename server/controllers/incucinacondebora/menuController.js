@@ -189,6 +189,24 @@ const menuController = {
     }
   },
 
+  getLastMenu: async (req, res) => {
+    try {
+      const query =
+        "SELECT id_menu FROM menu ORDER BY id_menu DESC LIMIT 1";
+      const [rows] = await pool.query(query);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching last menu:", error);
+      res.status(500).json({
+        message: "Error fetching last menu",
+        error: error.message,
+      });
+    }
+  },
+
+
   //Insert
   insertMenu: async (req, res) => {
     try {
@@ -198,18 +216,44 @@ const menuController = {
         id_persona,
         id_giorno,
         id_momento,
+        ingredientDetails,
+        porzioni,
       } = req.body;
+      
 
       // Insert ingredients for the recipe
-      const query =
-        "INSERT INTO menu(nome_ricetta_personalizzata, id_giorno_settimana, id_ricetta, id_persona, id_momento_giornata) VALUES(?, ?, ?, ?, ?)";
-      await pool.query(query, [
+      const query = "INSERT INTO menu(nome_ricetta_personalizzata, id_giorno_settimana, id_ricetta, id_persona, id_momento_giornata) VALUES(?, ?, ?, ?, ?)";
+      const [rows] = await pool.query(query, [
         nome_personalizzato,
         id_giorno,
         id_ricetta,
         id_persona,
         id_momento,
       ]);
+
+      const lastIdInsertedMenu = rows.insertId;
+
+      const query2 = "INSERT INTO menu_spesa(id_menu, porzioni) VALUES(?, ?)";
+      const [rows2] = await pool.query(query2, [
+        lastIdInsertedMenu,
+        porzioni,
+      ]);
+
+      const lastIdMenuSpesa = rows2.insertId;
+
+
+      const query3 =
+        "INSERT INTO spesa_ingredienti(id_menu_spesa, id_ingrediente, id_unita_misura, quantita) VALUES(?, ?, ?, ?)";
+
+      // Insert each ingredient
+      for (const ingredient of ingredientDetails) {
+        await pool.query(query3, [
+          lastIdMenuSpesa,
+          ingredient.name,
+          ingredient.unit,
+          ingredient.quantity,
+        ]);
+      }
 
       res.status(200).json({
         message: "New menu inserted successfully",
@@ -222,6 +266,7 @@ const menuController = {
       });
     }
   },
+
 
   saveMenu: async (req, res) => {
     try {
