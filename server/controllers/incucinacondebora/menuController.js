@@ -104,7 +104,7 @@ const menuController = {
       const { id_giorno, id_momento } = req.body;
 
       const query =
-        "SELECT * FROM menu m, ricetta r, persona p WHERE m.id_ricetta = r.id_ricetta AND m.id_persona = p.id_persona AND id_giorno_settimana = ? AND id_momento_giornata = ?";
+        "SELECT * FROM menu m, ricetta r, persona p, menu_spesa ms WHERE m.id_ricetta = r.id_ricetta AND m.id_persona = p.id_persona AND ms.id_menu = m.id_menu AND id_giorno_settimana = ? AND id_momento_giornata = ?";
       const [rows] = await pool.query(query, [id_giorno, id_momento]);
 
       // Send all rows as response
@@ -117,6 +117,28 @@ const menuController = {
       });
     }
   },
+
+
+  getElementsOfRecipe: async (req, res) => {
+    try {
+      const { idMenu } = req.body;
+
+      const query =
+        "SELECT i.nome_ingrediente, um.nome_unita_misura FROM menu m, menu_spesa ms, spesa_ingredienti si, ingrediente i, unita_misura um WHERE m.id_menu = ms.id_menu AND ms.id_menu_spesa = si.id_menu_spesa AND si.id_ingrediente = i.id_ingrediente AND si.id_unita_misura = um.id_unita_misura AND m.id_menu = ?";
+      const [rows] = await pool.query(query, [idMenu]);
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error getting info configuration:", error);
+      res.status(500).json({
+        message: "Error getting info configuration",
+        error: error.message,
+      });
+    }
+  },
+
+  
 
   getMenuArchiviati: async (req, res) => {
     try {
@@ -206,6 +228,28 @@ const menuController = {
     }
   },
 
+  
+  getMenuArchiviato: async (req, res) => {
+    try {
+      const { idNomeMenu } = req.body;
+
+      const query =
+        "SELECT * FROM archivio_nome WHERE id_archivio_nome = ?";
+      const [rows] = await pool.query(query, [idNomeMenu]);
+
+      console.log(rows);
+      
+
+      // Send all rows as response
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching menu archived:", error);
+      res.status(500).json({
+        message: "Error fetching menu archived",
+        error: error.message,
+      });
+    }
+  },
 
   //Insert
   insertMenu: async (req, res) => {
@@ -389,6 +433,28 @@ const menuController = {
       });
     }
   },
+
+  updateMenuArchiviatoNome: async (req, res) => {
+    try {
+      const { idNomeMenu, nomeArchivioNome } = req.body;
+
+      const query = "UPDATE archivio_nome SET nome_archivio_nome = ? WHERE id_archivio_nome = ?";
+      await pool.query(query, [
+        nomeArchivioNome,
+        idNomeMenu,
+      ]);
+      
+      // Send all rows as response
+      res.status(200).json({ message: "Name updated successfully" });
+    } catch (error) {
+      console.error("Error updating name archived menu:", error);
+      res.status(500).json({
+        message: "Error updating name archived menu",
+        error: error.message,
+      });
+    }
+  },
+
 
   //Delete
 

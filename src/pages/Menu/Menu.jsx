@@ -23,7 +23,6 @@ function Menu() {
   const [menuItems, setMenuItems] = useState([]);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [ingredientCount, setIngredientCount] = useState(1);
-  const [lastMenu, getLastMenu] = useState(1);
   const [UoM, setUoM] = useState([]);
 
   const [ingredients, setIngredients] = useState([
@@ -392,7 +391,7 @@ function Menu() {
         },
         body: JSON.stringify({
           nome_personalizzato: nomePersonalizzato,
-          id_ricetta: idRicettaToPass,
+          id_ricetta: idRicetta,
           id_persona: idPersona,
           id_giorno: dayClicked[0],
           id_momento: dayClicked[1],
@@ -733,7 +732,7 @@ function Menu() {
               <input 
                 type="text" 
                 value={nomePersonalizzato}
-                onChange={(e) => {setNomePersonalizzato(e.target.value)}
+                onChange={(e) => {setNomePersonalizzato(e.target.value); setIdRicetta(1)}
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Inserisci un nome personalizzato"

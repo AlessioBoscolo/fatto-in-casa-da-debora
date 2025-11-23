@@ -23,7 +23,12 @@ router.post('/saveMenu', menuController.saveMenu);
 router.post('/getMenuName', menuController.getMenuName);
 router.post('/getArchiviedElement', menuController.getArchiviedElement);
 router.post('/clearMenuArchivied', menuController.clearMenuArchivied);
-router.post('/uploadMenuArchivied', menuController.uploadMenuArchivied);
+router.post('/getMenuArchiviato', menuController.getMenuArchiviato);
+router.post('/updateMenuArchiviatoNome', menuController.updateMenuArchiviatoNome);
+router.post('/getElementsOfRecipe', menuController.getElementsOfRecipe);
+
+
+
 
 
 
