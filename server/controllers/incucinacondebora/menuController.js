@@ -124,7 +124,7 @@ const menuController = {
       const { idMenu } = req.body;
 
       const query =
-        "SELECT i.nome_ingrediente, um.nome_unita_misura FROM menu m, menu_spesa ms, spesa_ingredienti si, ingrediente i, unita_misura um WHERE m.id_menu = ms.id_menu AND ms.id_menu_spesa = si.id_menu_spesa AND si.id_ingrediente = i.id_ingrediente AND si.id_unita_misura = um.id_unita_misura AND m.id_menu = ?";
+        "SELECT si.id_spesa_ingredienti, i.id_ingrediente, i.nome_ingrediente, um.nome_unita_misura, si.quantita, si.id_unita_misura FROM menu m, menu_spesa ms, spesa_ingredienti si, ingrediente i, unita_misura um WHERE m.id_menu = ms.id_menu AND ms.id_menu_spesa = si.id_menu_spesa AND si.id_ingrediente = i.id_ingrediente AND si.id_unita_misura = um.id_unita_misura AND m.id_menu = ?";
       const [rows] = await pool.query(query, [idMenu]);
 
       // Send all rows as response
@@ -276,7 +276,7 @@ const menuController = {
       ]);
 
       const lastIdInsertedMenu = rows.insertId;
-
+      
       const query2 = "INSERT INTO menu_spesa(id_menu, porzioni) VALUES(?, ?)";
       const [rows2] = await pool.query(query2, [
         lastIdInsertedMenu,

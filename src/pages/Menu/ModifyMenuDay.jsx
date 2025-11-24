@@ -19,6 +19,17 @@ function ModifyMenuDay() {
 
   const [People, setPeople] = React.useState([]);
   const [Recipe, setRecipe] = React.useState([]);
+  const [Ingredients, setIngredients] = React.useState([]);
+
+  const [addNewIngredients, setAddNewIngredients] = useState([
+    { name: "", quantity: "", unit: "" },
+  ]);
+
+
+  const [editingIngredient, setEditingIngredient] = useState(null);
+  const [ingredientCount, setIngredientCount] = useState(0);
+
+  const [UoM, setUoM] = React.useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -107,8 +118,6 @@ function ModifyMenuDay() {
   };
 
 
-
-
   React.useEffect(() => {
     const fetchDaysElement = async () => {
       try {
@@ -170,9 +179,36 @@ function ModifyMenuDay() {
       }
     };
 
+    const fetchUoM = async () => {
+      try {
+        const response = await fetch(`${apiUrl}:3001/api/recipe/getUoM`);
+        const data = await response.json();
+        setUoM(data);
+      } catch (error) {
+        console.error("Errore nel caricamento degli ingredienti:", error);
+      }
+    };
+
+    const fetchIngredients = async () => {
+      try {
+        // Sostituisci con il tuo endpoint API
+        const response = await fetch(
+          `${apiUrl}:3001/api/recipe/getIngredients`
+        );
+        const data = await response.json();
+        setIngredients(data);
+      } catch (error) {
+        console.error("Errore nel caricamento degli ingredienti:", error);
+      }
+    };
+
+  
+
     fetchDaysElement();
     fetchPeople();
     fetchAllRecipe();
+    fetchUoM();
+    fetchIngredients();
   }, []);
 
   const handleDelete = async (idMenu) => {
@@ -230,8 +266,7 @@ function ModifyMenuDay() {
   const handleModify = async (idMenu) => {
 
     const currentElement = DaysElement.find((elem) => elem.id_menu === idMenu);
-
-    console.log(currentElement);
+    setElementClicked(currentElement);
     
     try {
       const response = await fetch(`${apiUrl}:3001/api/menu/getElementsOfRecipe`, {
@@ -247,192 +282,114 @@ function ModifyMenuDay() {
       if (response.ok) {
         const retrievedData = await response.json();
         setInfoElement(retrievedData);
+        setIsModalOpen(true);
       } else {
         console.error("Day elements API error:", response.status);
       }
     } catch (error) {
       console.error("Error fetching day elements:", error);
     }
+    };
 
-
-
-    /*
-    Swal.fire({
-      title: "Modifica Ricetta",
-      html: `
-        <div class="space-y-4">
-          <div class="text-left">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nome ricetta personalizzato</label>
-            <input 
-              type="text" 
-              id="nome_personalizzato" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value="${currentElement.nome_ricetta_personalizzata || ""}"
-              placeholder="Inserisci un nome personalizzato">
-          </div>
-          
-          <div class="text-left">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Seleziona la ricetta</label>
-            <div class="relative">
-              <select 
-                id="id_ricetta" 
-                class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm mobile-select"
-                required>
-                ${Recipe.map(
-                  (recipeItem) =>
-                    `<option value="${recipeItem.id_ricetta}" 
-                    ${
-                      recipeItem.nome_ricetta === currentElement.nome_ricetta
-                        ? "selected"
-                        : ""
-                    }>
-                    ${recipeItem.nome_ricetta}
-                  </option>`
-                ).join("")}
-              </select>
-            </div>
-          </div>
-          
-          <div class="text-left">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Seleziona la persona</label>
-            <div class="relative">
-              <select 
-                id="id_persona" 
-                class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm mobile-select"
-                required>
-                ${People.map(
-                  (peopleItem) =>
-                    `<option value="${peopleItem.id_persona}"
-                    ${
-                      peopleItem.nome_persona === currentElement.nome_persona
-                        ? "selected"
-                        : ""
-                    }>
-                    ${peopleItem.nome_persona}
-                  </option>`
-                ).join("")}
-              </select>
-            </div>
-          </div>
-        </div>
-      `,
-      showCancelButton: true,
-      confirmButtonText: "Salva modifiche",
-      cancelButtonText: "Annulla",
-      customClass: {
-        container: "swal2-container p-0",
-        popup: "swal2-popup rounded-lg w-[95%] mx-auto max-w-lg",
-        header: "swal2-header p-4",
-        title: "text-lg sm:text-xl font-semibold text-gray-800 mb-4",
-        htmlContainer: "swal2-html-container px-4 pb-4",
-        actions: "swal2-actions gap-2 p-4",
-        confirmButton:
-          "px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2",
-        cancelButton:
-          "px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2",
-      },
-      didOpen: () => {
-        const mobileSelects = document.querySelectorAll(".mobile-select");
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-          mobileSelects.forEach((select) => {
-            select.addEventListener("touchstart", (e) => {
-              e.stopPropagation();
-            });
-            select.addEventListener("click", (e) => {
-              e.stopPropagation();
-            });
-          });
-        }
-      },
-      width: "auto",
-      padding: 0,
-      position: "center",
-      allowOutsideClick: true,
-      showClass: {
-        popup: "animate__animated animate__fadeInDown animate__faster",
-      },
-      hideClass: {
-        popup: "animate__animated animate__fadeOutUp animate__faster",
-      },
-      preConfirm: () => {
-        return {
-          nome_personalizzato: document.getElementById("nome_personalizzato")
-            .value,
-          id_ricetta: document.getElementById("id_ricetta").value,
-          id_persona: document.getElementById("id_persona").value,
-        };
-      },
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await fetch(
-            `${apiUrl}:3001/api/menu/updateMenuElement`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                id_menu: idMenu,
-                ...result.value,
-              }),
-            }
-          );
-
-          if (response.ok) {
-            // Aggiorna la lista dei DaysElement con i nuovi dati
-            const updatedDaysElement = await fetch(
-              `${apiUrl}:3001/api/menu/getDaysElement`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  id_giorno: giorno,
-                  id_momento: momento_giornata,
-                }),
-              }
-            );
-
-            if (updatedDaysElement.ok) {
-              const retrievedData = await updatedDaysElement.json();
-              setDaysElement(retrievedData);
-            }
-
-            Swal.fire({
-              title: "Modificato!",
-              text: "La ricetta è stata modificata con successo.",
-              icon: "success",
-              customClass: {
-                popup: "swal2-popup rounded-lg",
-              },
-            });
-          } else {
-            Swal.fire({
-              title: "Errore",
-              text: "Errore durante la modifica della ricetta",
-              icon: "error",
-              customClass: {
-                popup: "swal2-popup rounded-lg",
-              },
-            });
-          }
-        } catch (error) {
-          console.error("Errore durante la modifica:", error);
-          Swal.fire({
-            title: "Errore",
-            text: "Errore durante la modifica della ricetta",
-            icon: "error",
-            customClass: {
-              popup: "swal2-popup rounded-lg",
-            },
-          });
-        }
-      }
-    });
-    */
+  const handleIngredientChange = (index, field, value) => {    
+    const AddNewIngredientsConst = [...addNewIngredients];
+    AddNewIngredientsConst[index] = {
+      ...AddNewIngredientsConst[index],
+      [field]: value,
+    };
+    
+    setAddNewIngredients(AddNewIngredientsConst);
   };
+
+
+
+  function writeIngredients() {
+    return Object.entries(infoElement).map(([key, field]) => (
+      <li key={key} className="mb-2 flex items-center gap-2 flex-wrap">
+        {editingIngredient === key ? (
+          <>
+            <input
+              type="number"
+              className="w-16 md:w-20 border rounded px-2"
+              value={field.quantita || ""}
+              onChange={(e) => {
+                const newIngredients = [...infoElement  ];
+                newIngredients[key] = {
+                  ...field,
+                  quantita: parseFloat(e.target.value) || 0,
+                };
+                setInfoElement(newIngredients);
+              }}
+            />
+
+
+            <TomSelectComponent
+              options={UoM.map(r => ({ value: r.id_unita_misura, text: r.nome_unita_misura }))}
+              value={field.id_unita_misura}
+              onChange={(e) => {
+                const selectedUoM = UoM.find(
+                  (u) => u.id_unita_misura === parseInt(e)
+                );
+
+                const newIngredients = [...infoElement];
+                newIngredients[key] = {
+                  ...field,
+                  id_unita_misura: e,
+                  nome_unita_misura: selectedUoM.nome_unita_misura,
+                };
+                setInfoElement(newIngredients);
+              }}
+              placeholder="Cerca una UoM..."
+              maxOptions={null}
+            />   
+
+            <TomSelectComponent
+              options={Ingredients.map(r => ({ value: r.id_ingrediente, text: r.nome_ingrediente }))}
+              value={field.id_ingrediente}
+              onChange={(e) => {
+                const selectedIngredient = Ingredients.find(
+                  (i) => i.id_ingrediente === parseInt(e)
+                );
+
+
+                const newIngredients = [...infoElement];
+                newIngredients[key] = {
+                  ...field,
+                  id_ingrediente: e,
+                  nome_ingrediente: selectedIngredient.nome_ingrediente,
+                };
+                setInfoElement(newIngredients);
+              }}
+              placeholder="Cerca un ingrediente..."
+              maxOptions={null}
+            />   
+
+            <button
+              onClick={() => setEditingIngredient(null)}
+              className="bg-green-500 text-white px-2 py-1 rounded"
+            >
+              ✓
+            </button>
+          </>
+        ) : (
+          <>
+            {field.nome_unita_misura !== "q.b." &&
+              field.quantita > 0 &&
+              field.quantita}{" "}
+            {field.nome_unita_misura}{" "}
+            <span className="font-bold">{field.nome_ingrediente}</span>
+            <button
+              onClick={() => setEditingIngredient(key)}
+              className="ml-2 text-blue-500"
+            >
+              ✎
+            </button>
+          </>
+        )}
+      </li>
+    ));
+  }
+
 
   return (
     <>
@@ -484,12 +441,9 @@ function ModifyMenuDay() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Inserisci ricetta"
+        title="Modifica menù"
         size="xl"
-      >
-        {  console.log("element",infoElement) }
-        {
-         /*
+      >         
         <div className="space-y-4">
           <div className="text-left">
             <label className="block text-sm font-medium text-gray-700 mb-1">Nome ricetta personalizzato</label>
@@ -497,66 +451,154 @@ function ModifyMenuDay() {
               type="text" 
               id="nome_personalizzato" 
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={currentElement.nome_ricetta_personalizzata || ""}
+              value={elementClicked.nome_ricetta_personalizzata || ""}
+              onChange={(e) => setElementClicked({
+                ...elementClicked,
+                nome_ricetta_personalizzata: e.target.value
+              })}              
               placeholder="Inserisci un nome personalizzato" 
             />
           </div>
+
+          <div className="text-left">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Porzioni</label>
+            <input 
+              type="number" 
+              id="porzioni" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={elementClicked.porzioni || 1}
+              min="1"
+              onChange={(e) => setElementClicked({
+                ...elementClicked,
+                porzioni: e.target.value
+              })}              
+              placeholder="Inserisci numero porzioni" 
+            />
+          </div>
+
           
           <div className="text-left">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Seleziona la ricetta</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Seleziona la ricetta
+            </label>
             <div className="relative">
               <TomSelectComponent
-                options={Recipe.map((recipeItem) => ({ value: item.id_ricetta, text: item.nome_ingrediente, selected: recipeItem.nome_ricetta === currentElement.nome_ricetta }))}
-                value={ingredients[index]?.name || ""}
-                onChange={(e) => handleIngredientChange(index, "name", e)}
-                placeholder="Cerca un una ricetta..."
+                options={Recipe.map(r => ({ value: r.id_ricetta, text: r.nome_ricetta }))}
+                value={elementClicked.id_ricetta}
+                onChange={(e) => setElementClicked({
+                  ...elementClicked,
+                  id_ricetta: e,
+                })}
+                placeholder="Cerca una ricetta..."
                 maxOptions={null}
               />   
-
-
-
-              <select 
-                id="id_ricetta" 
-                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm mobile-select"
-                required>
-                ${Recipe.map(
-                  (recipeItem) =>
-                    `<option value="${recipeItem.id_ricetta}" 
-                    ${
-                      recipeItem.nome_ricetta === currentElement.nome_ricetta
-                        ? "selected"
-                        : ""
-                    }>
-                    ${recipeItem.nome_ricetta}
-                  </option>`
-                ).join("")}
-              </select>
             </div>
           </div>
-          
+
+
+
           <div className="text-left">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Seleziona la persona</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Seleziona la persona
+            </label>
             <div className="relative">
-              <select 
-                id="id_persona" 
-                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm mobile-select"
-                required>
-                ${People.map(
-                  (peopleItem) =>
-                    `<option value="${peopleItem.id_persona}"
-                    ${
-                      peopleItem.nome_persona === currentElement.nome_persona
-                        ? "selected"
-                        : ""
-                    }>
-                    ${peopleItem.nome_persona}
-                  </option>`
-                ).join("")}
-              </select>
+              <TomSelectComponent
+                options={People.map(r => ({ value: r.id_persona, text: r.nome_persona }))}
+                value={elementClicked.id_persona}
+                onChange={(e) => setElementClicked({
+                  ...elementClicked,
+                  id_persona: e,
+                })}
+                placeholder="Cerca una persona..."
+                maxOptions={null}
+              />   
             </div>
           </div>
+
+          { writeIngredients() }
+
+
+
+          {elementClicked.nome_ricetta_personalizzata !== '' && (
+            <>
+              <br/><h2 className="text-center text-xl font-bold" >Nuovi ingredienti</h2>
+              <div className="mb-3">
+                <label className="form-label">Numero di ingredienti</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="ingredientCount"
+                  min="0"
+                  defaultValue={ingredientCount}
+                  onChange={(e) =>
+                    setIngredientCount(parseInt(e.target.value) || 0)
+                  }
+                />
+              </div>
+
+              {[...Array(ingredientCount)].map((_, index) => (
+                <div key={index} className="mb-16 row">
+                  <div className="col-md-5">
+                    <label className="form-label">Ingrediente {index + 1}</label>
+                    <TomSelectComponent
+                      options={Ingredients.map((item) => ({ value: item.id_ingrediente, text: item.nome_ingrediente }))}
+                      value={addNewIngredients[index]?.name || ""}
+                      onChange={(e) => handleIngredientChange(index, "name", e)}
+                      placeholder="Cerca un ingrediente..."
+                      maxOptions={null}
+                    />   
+                  </div>
+                  <div className="col-md-3">
+                    <label className="form-label">Quantità</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={addNewIngredients[index]?.quantity || ""}
+                      onChange={(e) =>
+                        handleIngredientChange(index, "quantity", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Unità di misura</label>
+                    <TomSelectComponent
+                      options={UoM.map((item) => ({ value: item.id_unita_misura, text: item.nome_unita_misura }))}
+                      value={addNewIngredients[index]?.unit || ""}
+                      onChange={(e) => handleIngredientChange(index, "unit", e)}
+                      placeholder="Cerca una UoM..."
+                      maxOptions={null}
+                    />   
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
-      */ }
+
+        <div className="flex justify-end gap-3 pt-4">
+
+          <button
+            onClick={() => {
+              setIsModalOpen(false);
+            }}
+    
+  
+            className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+          >
+            Modifica
+          </button>
+          <button
+            onClick={() => {
+              setIsModalOpen(false);
+            }}
+    
+  
+            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            Annulla
+          </button>
+        </div>
+
       </Modal>
 
       <Footer />
