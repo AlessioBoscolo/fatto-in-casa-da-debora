@@ -16,6 +16,7 @@ import Menu from "./pages/Menu/Menu";
 import Archivio from "./pages/Menu/Archivio";
 import ArchivioMenu from "./pages/Menu/ArchivioMenu";
 import ModifyMenuDay from "./pages/Menu/ModifyMenuDay";
+import Spesa from "./pages/Spesa/Spesa.jsx";
 
 // GallanzScheduler
 
@@ -47,6 +48,14 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <DashboardPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/spesa",
+    element: (
+      <ProtectedRoute>
+        <Spesa />
       </ProtectedRoute>
     ),
   },

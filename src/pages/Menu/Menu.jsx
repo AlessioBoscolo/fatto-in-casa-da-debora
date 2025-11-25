@@ -375,7 +375,10 @@ function Menu() {
   }
 
   async function insertDayRecipe() {
-    if((nomePersonalizzato == '' && idRicetta == null) || idPersona == '' || nrPorzioni == null){
+
+    const hasData = ingredients.some(item => item.name !== '' && item.quantity !== '' && item.unit !== '');    
+
+    if((nomePersonalizzato == '' && idRicetta == null) || idPersona == null || nrPorzioni == null || !hasData){
       setError(true);
       return;
     }

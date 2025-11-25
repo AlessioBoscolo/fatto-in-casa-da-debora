@@ -9,6 +9,7 @@ const homeRoutes = require("./routes/incucinacondebora/homeRoutes");
 const categoryRoutes = require("./routes/incucinacondebora/categoryRoutes");
 const recipeRoutes = require("./routes/incucinacondebora/recipeRoutes");
 const menuRoutes = require("./routes/incucinacondebora/menuRoutes");
+const spesaRoutes = require("./routes/incucinacondebora/spesaRoutes");
 const testRoutes = require("./routes/gallanzscheduler/eventsRoutes");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api/home", homeRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/recipe", recipeRoutes);
 app.use("/api/menu", menuRoutes);
+app.use("/api/spesa", spesaRoutes);
 app.use("/api/gallanzscheduler", testRoutes);
 
 const PORT = process.env.PORT || 3001;

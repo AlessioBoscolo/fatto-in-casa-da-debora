@@ -118,6 +118,9 @@ const menuController = {
       );      
 
       const sumTwoRows = [...rows, ...onlyInRows2];   
+
+      console.log(rows, onlyInRows2);
+      
       
       const sorted = [...sumTwoRows].sort((a, b) => a.id_menu - b.id_menu);
 

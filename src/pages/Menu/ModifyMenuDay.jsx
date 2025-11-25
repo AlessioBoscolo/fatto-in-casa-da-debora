@@ -36,6 +36,8 @@ function ModifyMenuDay() {
 
   const [elementClicked, setElementClicked] = useState([]); 
 
+  const [error, setError] = useState(false);
+
   const cookieValue = document.cookie
     .split("; ")
     .find((row) => row.startsWith("recipeSelected="))
@@ -271,9 +273,20 @@ function ModifyMenuDay() {
 
   const updateMenuElement = async () => {
     console.log(elementClicked);
-    console.log(addNewIngredients);
-    console.log(infoElement);
+    
+    console.log("nome", elementClicked.nome_ricetta_personalizzata);
+    
 
+    if((elementClicked.nome_ricetta_personalizzata == '' && elementClicked.id_ricetta == '') || elementClicked.id_persona == '' || elementClicked.porzioni == ''){
+      setError(true);
+      return;
+    }else if(elementClicked.nome_ricetta_personalizzata !== ''){
+      setElementClicked({
+        ...elementClicked,
+        id_ricetta: 1,
+      });
+    }
+    
     try {
       const response = await fetch(`${apiUrl}:3001/api/menu/updateMenuElement`, {
         method: "POST",
@@ -305,6 +318,10 @@ function ModifyMenuDay() {
       console.error("Error fetching day elements:", error);
     }
     
+
+    resetFields();
+    setIsModalOpen(false);
+    setError(false);
     
     
     
@@ -632,13 +649,18 @@ function ModifyMenuDay() {
           )}
         </div>
 
+        <div className="text-left">
+          <div className="relative">
+            {error && <span className="text-red-500" >Completa tutti i campi obbligatori</span>}
+          </div>
+        </div>
+
+
         <div className="flex justify-end gap-3 pt-4">
 
           <button
             onClick={() => {
-              setIsModalOpen(false);
               updateMenuElement();
-              resetFields();
             }}
     
   
