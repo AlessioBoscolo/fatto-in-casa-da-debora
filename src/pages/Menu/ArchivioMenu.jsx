@@ -111,6 +111,8 @@ function Archivio_Menu() {
         },
       });
 
+      console.log(response);
+      
       if (response.ok) {
         return true;
       }

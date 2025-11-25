@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer";
+import { showToast } from "../../components/Toast/Toast";
 
 import Modal from "../../components/Modal";
 
@@ -118,30 +119,31 @@ function ModifyMenuDay() {
   };
 
 
-  React.useEffect(() => {
-    const fetchDaysElement = async () => {
-      try {
-        const response = await fetch(`${apiUrl}:3001/api/menu/getDaysElement`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id_giorno: giorno,
-            id_momento: momento_giornata,
-          }),
-        });
+  const fetchDaysElement = async () => {
+    try {
+      const response = await fetch(`${apiUrl}:3001/api/menu/getDaysElement`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_giorno: giorno,
+          id_momento: momento_giornata,
+        }),
+      });
 
-        if (response.ok) {
-          const retrievedData = await response.json();
-          setDaysElement(retrievedData);
-        } else {
-          console.error("Day elements API error:", response.status);
-        }
-      } catch (error) {
-        console.error("Error fetching day elements:", error);
+      if (response.ok) {
+        const retrievedData = await response.json();
+        setDaysElement(retrievedData);
+      } else {
+        console.error("Day elements API error:", response.status);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching day elements:", error);
+    }
+  };
+
+  React.useEffect(() => {
 
     const fetchPeople = async () => {
       try {
@@ -212,6 +214,9 @@ function ModifyMenuDay() {
   }, []);
 
   const handleDelete = async (idMenu) => {
+    const currentElement = DaysElement.find((elem) => elem.id_menu === idMenu);
+    setElementClicked(currentElement);
+
     const result = await Swal.fire({
       title: "Sei sicuro?",
       text: "Vuoi eliminare questa ricetta dal menu?",
@@ -234,6 +239,7 @@ function ModifyMenuDay() {
             },
             body: JSON.stringify({
               id_menu: idMenu,
+              element: currentElement,
             }),
           }
         );
@@ -263,6 +269,53 @@ function ModifyMenuDay() {
     }
   };
 
+  const updateMenuElement = async () => {
+    console.log(elementClicked);
+    console.log(addNewIngredients);
+    console.log(infoElement);
+
+    try {
+      const response = await fetch(`${apiUrl}:3001/api/menu/updateMenuElement`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          element: elementClicked,
+          newIngredients: addNewIngredients,
+          info: infoElement,
+        }),
+      });
+
+      if (response.ok) {
+        showToast("success", "Elemento modificato con successo!");
+        fetchDaysElement();
+        setIsModalOpen(false);
+        
+      } else {
+        showToast("error", "Errore durante la modifica dell'elemento!");
+        setIsModalOpen(false);
+
+        console.error("Day elements API error:", response.status);
+      }
+    } catch (error) {
+      showToast("error", "Errore durante la modifica dell'elemento!");
+      setIsModalOpen(false);
+
+      console.error("Error fetching day elements:", error);
+    }
+    
+    
+    
+    
+  }
+
+  const resetFields = () => {
+    setAddNewIngredients([{ name: "", quantity: "", unit: "" }]);
+    setIngredientCount(0);
+    setEditingIngredient(null);
+  }
+
   const handleModify = async (idMenu) => {
 
     const currentElement = DaysElement.find((elem) => elem.id_menu === idMenu);
@@ -289,7 +342,7 @@ function ModifyMenuDay() {
     } catch (error) {
       console.error("Error fetching day elements:", error);
     }
-    };
+  };
 
   const handleIngredientChange = (index, field, value) => {    
     const AddNewIngredientsConst = [...addNewIngredients];
@@ -331,17 +384,20 @@ function ModifyMenuDay() {
                   (u) => u.id_unita_misura === parseInt(e)
                 );
 
-                const newIngredients = [...infoElement];
-                newIngredients[key] = {
-                  ...field,
-                  id_unita_misura: e,
-                  nome_unita_misura: selectedUoM.nome_unita_misura,
-                };
-                setInfoElement(newIngredients);
+                // Add safety check before accessing properties
+                if (selectedUoM) {
+                  const newIngredients = [...infoElement];
+                  newIngredients[key] = {
+                    ...field,
+                    id_unita_misura: e,
+                    nome_unita_misura: selectedUoM.nome_unita_misura,
+                  };
+                  setInfoElement(newIngredients);
+                }
               }}
               placeholder="Cerca una UoM..."
               maxOptions={null}
-            />   
+            />
 
             <TomSelectComponent
               options={Ingredients.map(r => ({ value: r.id_ingrediente, text: r.nome_ingrediente }))}
@@ -351,14 +407,15 @@ function ModifyMenuDay() {
                   (i) => i.id_ingrediente === parseInt(e)
                 );
 
-
-                const newIngredients = [...infoElement];
-                newIngredients[key] = {
-                  ...field,
-                  id_ingrediente: e,
-                  nome_ingrediente: selectedIngredient.nome_ingrediente,
-                };
-                setInfoElement(newIngredients);
+                if(selectedIngredient){
+                  const newIngredients = [...infoElement];
+                  newIngredients[key] = {
+                    ...field,
+                    id_ingrediente: e,
+                    nome_ingrediente: selectedIngredient.nome_ingrediente,
+                  };
+                  setInfoElement(newIngredients);
+                }
               }}
               placeholder="Cerca un ingrediente..."
               maxOptions={null}
@@ -466,7 +523,7 @@ function ModifyMenuDay() {
               type="number" 
               id="porzioni" 
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={elementClicked.porzioni || 1}
+              value={ elementClicked.porzioni || 0 }
               min="1"
               onChange={(e) => setElementClicked({
                 ...elementClicked,
@@ -580,6 +637,8 @@ function ModifyMenuDay() {
           <button
             onClick={() => {
               setIsModalOpen(false);
+              updateMenuElement();
+              resetFields();
             }}
     
   
@@ -590,6 +649,7 @@ function ModifyMenuDay() {
           <button
             onClick={() => {
               setIsModalOpen(false);
+              resetFields();
             }}
     
   

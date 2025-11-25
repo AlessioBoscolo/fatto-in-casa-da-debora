@@ -26,6 +26,7 @@ router.post('/clearMenuArchivied', menuController.clearMenuArchivied);
 router.post('/getMenuArchiviato', menuController.getMenuArchiviato);
 router.post('/updateMenuArchiviatoNome', menuController.updateMenuArchiviatoNome);
 router.post('/getElementsOfRecipe', menuController.getElementsOfRecipe);
+router.post('/uploadMenuArchivied', menuController.uploadMenuArchivied);
 
 
 
