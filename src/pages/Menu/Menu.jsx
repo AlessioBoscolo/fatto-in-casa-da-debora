@@ -378,7 +378,7 @@ function Menu() {
 
     const hasData = ingredients.some(item => item.name !== '' && item.quantity !== '' && item.unit !== '');    
 
-    if((nomePersonalizzato == '' && idRicetta == null) || idPersona == null || nrPorzioni == null || !hasData){
+    if((nomePersonalizzato == '' && idRicetta == null) || idPersona == null || nrPorzioni == null || (!hasData && nomePersonalizzato != '')){
       setError(true);
       return;
     }

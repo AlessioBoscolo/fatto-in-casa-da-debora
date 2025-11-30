@@ -272,10 +272,6 @@ function ModifyMenuDay() {
   };
 
   const updateMenuElement = async () => {
-    console.log(elementClicked);
-    
-    console.log("nome", elementClicked.nome_ricetta_personalizzata);
-    
 
     if((elementClicked.nome_ricetta_personalizzata == '' && elementClicked.id_ricetta == '') || elementClicked.id_persona == '' || elementClicked.porzioni == ''){
       setError(true);

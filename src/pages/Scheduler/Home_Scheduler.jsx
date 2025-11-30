@@ -30,7 +30,6 @@ function Home_Scheduler() {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Data ricevuta dal server:", data);
                 
                 // Assicurati che data sia sempre un array, anche vuoto
                 const eventsArray = Array.isArray(data) ? data : [];
